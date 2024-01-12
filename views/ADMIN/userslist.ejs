@@ -1,0 +1,259 @@
+<%- include('../ADMIN/ADMINPARTIAL/header') %>
+
+<%- include('../ADMIN/ADMINPARTIAL/middle') %>
+
+
+
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <form class="searchform">
+                    <div class="input-group">
+                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
+                    </div>
+                    <datalist id="search_terms">
+                        <option value="Products">
+                        <option value="New orders">
+                        <option value="Apple iphone">
+                        <option value="Ahmed Hassan">
+                    </datalist>
+                </form>
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon" href="#">
+                            <i class="material-icons md-notifications animation-shake"></i>
+                            <span class="badge rounded-pill">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
+                            <a class="dropdown-item text-brand" href="#"><img src="/adminassets/imgs/theme/flag-us.png" alt="English">English</a>
+                            <a class="dropdown-item" href="#"><img src="/adminassets/imgs/theme/flag-fr.png" alt="Français">Français</a>
+                            <a class="dropdown-item" href="#"><img src="/adminassets/imgs/theme/flag-jp.png" alt="Français">日本語</a>
+                            <a class="dropdown-item" href="#"><img src="/adminassets/imgs/theme/flag-cn.png" alt="Français">中国人</a>
+                        </div>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="/adminassets/imgs/people/avatar2.jpg" alt="User"></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <section class="content-main">
+            <div class="content-header">
+                <h2 class="content-title">Users List</h2>
+                <div>
+                    <a href="#" class="btn btn-primary"><i class="material-icons md-plus"></i> Create new</a>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <header class="card-header">
+                    <div class="row gx-3">
+                        <div class="col-lg-4 col-md-6 me-auto">
+                            <input type="text" placeholder="Search..." class="form-control">
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-6">
+                            <select class="form-select">
+                                <option>Status</option>
+                                <option>Active</option>
+                                <option>Disabled</option>
+                                <option>Show all</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-6">
+                            <select class="form-select">
+                                <option>Show 20</option>
+                                <option>Show 30</option>
+                                <option>Show 40</option>
+                            </select>
+                        </div>
+                    </div>
+                </header> <!-- card-header end// -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                   
+                                    <th class="text-end"> Action </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                               <% users.forEach(user => { %>
+                                <tr>
+                                    <td width="40%">
+                                        <a href="#" class="itemside">
+                                            <div class="left">
+                                                <img src="/adminassets/imgs/people/avatar1.jpg" class="img-sm img-avatar" alt="Userpic">
+                                            </div>
+                                            <div class="info pl-3">
+                                                <h6 class="mb-0 title"><%= user.username %></h6>
+                                                <!-- <small class="text-muted">Seller ID: #439</small> -->
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td><%= user.email %></td>
+                                    <td>
+                                     <% if (user.isBlocked === false)   { %>   
+                                    <span class="badge rounded-pill alert-success">Active</span>
+                                    <% } else { %>
+                                    <span class="badge rounded-pill alert-success">In Active</span>
+                                    <% } %>
+                                    </td>
+                                    <!-- <td>08.07.2022</td> -->
+                                    <td class="text-end">
+                                        <% if (user.isBlocked === false) { %>
+                                        <button  class="btn btn-sm btn-brand rounded font-sm mt-15" onclick="blockUser('<%= user._id %>')">Block</button>
+                                        <% } else  { %>
+                                            <button class="btn btn-sm btn-brand rounded font-sm mt-15" onclick="unblockUser('<%= user._id %>')">Unblock</button>
+                                       <% } %>   
+                                    </td>
+                                </tr>
+                                
+                            <% }); %>   
+                            </tbody>
+                        </table> <!-- table-responsive.// -->
+                    </div>
+                </div> <!-- card-body end// -->
+            </div> <!-- card end// -->
+
+
+            <div class="pagination-area mt-15 mb-50">
+                <nav aria-label="Page navigation example">
+                    <div class="page-buttons">
+                        <p>pages</p>
+                        <% for (let i = 1; i <= totalPages; i++) { %>
+                            <% if (page===i) {%>
+                                <button type="button">
+                                    <%= i %>
+                                </button>
+                             <% }  else  { %>
+                             <a href="/admin/userslist?page=<%= i %>">
+                                <button type="button" class="page-btn">
+                                    <%= i %>
+                                </button>
+                             </a>  
+                             <% } %> <% } %>        
+                    </div>
+                      
+                </nav>
+            </div>
+        </section> <!-- content-main end// -->
+        <!-- sweet alert link -->
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                    document.write(new Date().getFullYear())
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <script>
+        //block user
+        async function block(userId,isBlocked){
+  try{
+    const response = await fetch(`/admin/block/${userId}`,{
+      method:'PUT',
+      headers: {
+        'Content-Type':'application-json'
+      },
+      body: JSON.stringify({isBlocked})
+    })
+    .then((res)=> res.json())
+    .then(async(data)=>{
+        if(data.success){
+       await  swal({
+        title: "Good job!",
+        text: "You Blocked The User!",
+        icon: "success",
+        });
+        window.location.reload()
+        }else{
+            alert(data.message)
+        }
+    })
+    .catch((err)=>{
+        alert("error")
+    })
+   
+  } catch(error){
+    console.error('Error updating block status:',error)
+  }
+}
+
+function blockUser(userId){
+  
+  block(userId,true)
+}
+
+async function unblock(userId,isBlocked){
+  try{
+    const response = await fetch(`/admin/unblock/${userId}`,{
+      method:'PUT',
+      headers: {
+        'Content-Type':'application-json'
+      },
+      body: JSON.stringify({isBlocked})
+    })
+    .then((res)=> res.json())
+    .then(async(data)=>{
+    if(data.success){
+       await  swal({
+        title: "Good job!",
+        text: "You Unblocked The User!",
+        icon: "success",
+        });
+        window.location.reload()
+        }else{
+            alert(data.message)  
+        }
+    }).catch((err)=>{
+        alert("error")
+    })
+    if (!response.ok){
+      console.error('Failed to update block status')
+    }
+  } catch(error){
+    console.error('Error updating block status:',error)
+  }
+}
+
+function unblockUser(userId){
+  unblock(userId,false)
+}
+    </script>
+
+<%- include('../ADMIN/ADMINPARTIAL/footer') %>
+
+

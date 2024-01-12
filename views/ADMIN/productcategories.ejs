@@ -1,0 +1,320 @@
+ 
+<%- include('../ADMIN/ADMINPARTIAL/header') %>
+
+<%- include('../ADMIN/ADMINPARTIAL/middle') %>
+
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <form class="searchform">
+                    <div class="input-group">
+                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
+                    </div>
+                    <datalist id="search_terms">
+                        <option value="Products">
+                        <option value="New orders">
+                        <option value="Apple iphone">
+                        <option value="Ahmed Hassan">
+                    </datalist>
+                </form>
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon" href="#">
+                            <i class="material-icons md-notifications animation-shake"></i>
+                            <span class="badge rounded-pill">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
+                            <a class="dropdown-item text-brand" href="#"><img src="adminassets/imgs/theme/flag-us.png" alt="English">English</a>
+                            <a class="dropdown-item" href="#"><img src="adminassets/imgs/theme/flag-fr.png" alt="Français">Français</a>
+                            <a class="dropdown-item" href="#"><img src="adminassets/imgs/theme/flag-jp.png" alt="Français">日本語</a>
+                            <a class="dropdown-item" href="#"><img src="adminassets/imgs/theme/flag-cn.png" alt="Français">中国人</a>
+                        </div>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="adminassets/imgs/people/avatar2.jpg" alt="User"></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Categories </h2>
+                    <p>Add, edit or delete a category</p>
+                </div>
+                <div>
+                    <input type="text" placeholder="Search Categories" class="form-control bg-white">
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                                  <span><p style="color: red;"><%= catexist %></p></span>
+                            <form action="/admin/addcat" method="post" onsubmit="return validateForm()">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Name</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="category" name="name" />
+                                    <span style="color: red;" id="categoryError"></span>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="form-label">Description</label>
+                                    <textarea placeholder="Type here" class="form-control" name="description" id="description"></textarea>
+                                    <span style="color: red;" id="descriptionError"></span>
+                                </div>
+                                
+                                <div class="d-grid">
+                                    <button class="btn btn-primary" type="submit">Create category</button>
+                                </div>
+                            </form>
+                            
+                            
+                        </div>
+                        <div class="col-md-9">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" style="visibility: hidden;"/>
+                                                </div>
+                                            </th>
+                                            <th></th>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                            <th>Status</th>
+                                            <th class="text-end">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                       
+                                  <% categories.forEach(category => { %>     
+                                        <tr>
+                                            <td class="text-center">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" style="visibility: hidden;"/>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                            <td><b><%= category.categoryName %></b></td>
+                                            <td><%= category.description %></td>
+                                            <!-- <td>/men</td> -->
+                                            <% if(category.isListed===false)  { %> 
+                                            <td>unpublished</td>
+                                            <% } else { %>
+                                            <td>published</td>
+                                            <% } %>
+                                            <td class="text-end">
+                                                <div class="dropdown">
+                                                    <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                                    <div class="dropdown-menu">
+                                                        
+                                                        <a class="dropdown-item"  href="/admin/updatecat/<%= category.id %>">Edit info</a>
+                                                        <% if(category.isListed===false)  { %>   
+                                                        <button class="dropdown-item text-danger" onclick="publish('<%= category.id %>')">Publish</button>
+                                                        <% } else { %>
+                                                          <button class="dropdown-item text-danger"  onclick="unPublish('<%= category.id %>')">Unpublish</button>    
+                                                          <% } %> 
+                                                    </div>
+                                                </div> <!-- dropdown //end -->
+                                            </td>
+                                        </tr>
+                                        
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> <!-- .col// -->
+                    </div> <!-- .row // -->
+                </div> <!-- card body .// -->
+            </div> <!-- card .// -->
+                   <!-- pagination  -->
+
+                   <div class="page-buttons">
+                    <p>Pages</p>
+                    <% for (let i = 1; i <= totalPages ; i++) { %> 
+                        <% if (i === page) { %>
+                    <button type="button" class="page-btn active">
+                      <%= i %>
+                    </button>
+                    <% } else { %>
+                    <a href="/admin/productcategories?page=<%= i %>"
+                      ><button type="button" class="page-btn">
+                        <%= i %>
+                      </button></a>
+                    <% } %> <% } %>
+                  </div>
+                  <br/>
+                 <!-- pagination end -->
+
+        </section> <!-- content-main end// -->
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                    document.write(new Date().getFullYear())
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <script src=
+"https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js">
+  </script>
+  <script>
+    
+  async function published(categoryId,isListed){
+   try{
+    const response = await fetch(`/admin/publish/${categoryId}`,{
+       method:'PUT',
+       headers: {
+        'Content-Type':'application-json'
+       },
+     body: JSON.stringify({isListed})
+    })
+    .then((res) =>res.json())
+    .then(async(data)=>{
+       if(data.success){
+      await  swal({
+          title:'Good Job',
+          text:'Category Published',
+          icon:'success' 
+        })
+        window.location.reload()
+       }else{
+        alert(data.message)
+       } 
+    })
+    .catch((error)=>{
+        console.log(error);
+        alert('There is an error')
+    })
+   } catch(error){
+    console.error('Error updating block status:',error)
+  }
+}
+function publish(categoryId){
+    published(categoryId,true)
+}
+
+async function unPublished(categoryId,isListed){
+   try{
+    const response = await fetch(`/admin/publish/${categoryId}`,{
+       method:'PUT',
+       headers: {
+        'Content-Type':'application-json'
+       },
+     body: JSON.stringify({isListed})
+    })
+    .then((res) =>res.json())
+    .then(async(data)=>{
+       if(data.success){
+      await  swal({
+          title:'Good Job',
+          text:'Category Unpublished',
+          icon:'success' ,
+          timer: 3000
+        })
+        window.location.reload()
+       }else{
+        alert(data.message)
+       } 
+    })
+    .catch((error)=>{
+        console.log(error);
+        alert('There is an error')
+    })
+   } catch(error){
+    console.error('Error updating block status:',error)
+  }
+}
+function unPublish(categoryId,isListed){
+  unPublished(categoryId,false)
+}
+
+  </script>
+
+<script>
+    function validateForm() {
+        var categoryName = document.getElementById("product_name").value;
+        var description = document.getElementById("description").value;
+
+        // Clear previous error messages
+        document.getElementById('nameError').textContent = '';
+        document.getElementById('descriptionError').textContent = '';
+
+        // Validate Name
+        if (categoryName.trim() === '') {
+            document.getElementById('nameError').textContent = 'Name is required';
+            return false;
+        }
+
+        // Validate Description
+        if (description.trim() === '') {
+            document.getElementById('descriptionError').textContent = 'Description is required';
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+
+<script>
+    function validateForm() {
+        var categoryName = document.getElementById("category").value;
+        var description = document.getElementById("description").value;
+
+        // Clear previous error messages
+        document.getElementById('categoryError').textContent = '';
+        document.getElementById('descriptionError').textContent = '';
+
+        // Validate Name
+        if (categoryName.trim() === '') {
+            document.getElementById('categoryError').textContent = 'Name is required';
+            return false;
+        }
+
+        // Validate Description
+        if (description.trim() === '') {
+            document.getElementById('descriptionError').textContent = 'Description is required';
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+
+
+<%- include('../ADMIN/ADMINPARTIAL/footer') %>
+

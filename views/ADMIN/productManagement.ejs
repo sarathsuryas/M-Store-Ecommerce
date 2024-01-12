@@ -1,0 +1,259 @@
+<%- include('../ADMIN/ADMINPARTIAL/header') %>
+
+<%- include('../ADMIN/ADMINPARTIAL/middle') %>
+
+
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <form class="searchform">
+                    <div class="input-group">
+                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
+                    </div>
+                    <datalist id="search_terms">
+                        <option value="Products">
+                        <option value="New orders">
+                        <option value="Apple iphone">
+                        <option value="Ahmed Hassan">
+                    </datalist>
+                </form>
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon" href="#">
+                            <i class="material-icons md-notifications animation-shake"></i>
+                            <span class="badge rounded-pill">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
+                            <a class="dropdown-item text-brand" href="#"><img src="/adminassets/imgs/theme/flag-us.png" alt="English">English</a>
+                            <a class="dropdown-item" href="#"><img src="/adminassets/imgs/theme/flag-fr.png" alt="Français">Français</a>
+                            <a class="dropdown-item" href="#"><img src="/adminassets/imgs/theme/flag-jp.png" alt="Français">日本語</a>
+                            <a class="dropdown-item" href="#"><img src="/adminassets/imgs/theme/flag-cn.png" alt="Français">中国人</a>
+                        </div>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="/adminassets/imgs/people/avatar2.jpg" alt="User"></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Product</h2>
+                    <p>Add, edit or delete a product</p>
+                </div>
+                <div>
+                    <input type="text" placeholder="Search " class="form-control bg-white">
+                </div>
+            </div>
+            <!-- product list -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="product-table">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th class="text-center">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" style="visibility: hidden;" />
+                                        </div> -
+                                    </th>
+                                    <th>IMG</th>
+                                    <th style="min-width: 150px;">Product Name</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Discount</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                      
+                            <tbody>
+                                <% products.forEach((product) => { %>
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" style="visibility: hidden;"/>
+                                            </div>
+                                        </td>
+            
+                                        <td class="align-middle">
+                                            <!-- Display product image -->
+                                            <img src="<%= product.coverImage %>" alt="Product Image" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
+                                        </td>
+            
+                                        <td class="align-middle" style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;">
+                                            <%= product.title %>
+                                        </td>
+                                        <td class="align-middle"><b><%= product.category.categoryName %></b></td>
+                                        <td class="align-middle"><%= product.price %></td>
+                                        <td class="align-middle"><%= product.stock %></td>
+                                        <td class="align-middle"><%= product.discount %></td>
+                                        <td class="align-middle">
+                                            <% if(product.isListed === true) { %>
+                                                <span class="badge bg-success">Published</span>
+                                            <% } else { %>
+                                                <span class="badge bg-secondary">Unpublished</span>
+                                            <% } %>
+                                        </td>
+                                        <td class="text-end align-middle">
+                                            <div class="btn-group">
+                                                <a href="/admin/editproduct/<%= product.id %>" class="btn btn-info btn-sm">Edit</a>
+                                                <% if(product.isListed === true) { %>
+                                                    <button class="btn btn-danger btn-sm" onclick="unPublish('<%= product.id %>')">Unpublish</button>
+                                                <% } else { %>
+                                                    <button class="btn btn-success btn-sm" onclick="publish('<%= product.id %>')">Publish</button>
+                                                <% } %>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }); %> 
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- pagination  -->
+    
+            <div class="page-buttons">
+                <p>Pages</p>
+                <% for (let i = 1; i <= totalPages ; i++) { %> 
+                    <% if (i === page) { %>
+                <button type="button" class="page-btn active">
+                  <%= i %>
+                </button>
+                <% } else { %>
+                <a href="/admin/productmanagement?page=<%= i %>"
+                  ><button type="button" class="page-btn">
+                    <%= i %>
+                  </button></a>
+                <% } %> <% } %>
+              </div>
+              <br/>
+    
+              <!-- pagination ends here -->
+              
+            <!-- end -->
+            
+        </section> <!-- content-main end// -->
+        
+            <!-- card end// -->
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                    document.write(new Date().getFullYear())
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+
+    
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script>
+    async function published(productId,isListed){
+        try{
+            const response = await fetch(`/admin/productpublish/${productId}`,{
+              method:'PUT',
+              headers:{
+                'Content-Type':'application-json'
+              },
+              body: JSON.stringify({isListed})
+            })
+            .then((res) =>res.json())
+            .then((data)=>{
+             if(data.success){
+              swal({
+                title: 'Good Job',
+                  text: 'You Clicked the Button',
+                    icon:'success' 
+              })
+        window.location.reload()
+       }else{
+        alert(data.message)
+       } 
+    })
+    .catch((error)=>{
+        console.log(error);
+        alert('There is an error')
+    })
+    }catch(error){
+    console.error('Error updating block status:',error)
+  }
+}
+
+function publish(productId){
+    published(productId,true)
+}
+
+async function unPublished(productId,isListed){
+        try{
+            const response = await fetch(`/admin/productpublish/${productId}`,{
+              method:'PUT',
+              headers:{
+                'Content-Type':'application-json'
+              },
+              body: JSON.stringify({isListed})
+            })
+            .then((res) =>res.json())
+            .then((data)=>{
+             if(data.success){
+              swal({
+                 title:'Good Job',
+                 text:'You Clicked the Button',
+                icon:'success' 
+                   })
+        window.location.reload()
+       }else{
+        alert(data.message)
+       } 
+    })
+    .catch((error)=>{
+        console.log(error);
+        alert('There is an error')
+    })
+    }catch(error){
+    console.error('Error updating block status:',error)
+  }
+}
+
+function unPublish(productId){
+unPublished(productId,false)
+}
+
+</script>
+        
+    <%- include('../ADMIN/ADMINPARTIAL/footer') %>
+
+

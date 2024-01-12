@@ -1,0 +1,250 @@
+
+<%- include('../ADMIN/ADMINPARTIAL/header') %>
+
+<%- include('../ADMIN/ADMINPARTIAL/middle') %>
+
+
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <form class="searchform">
+                    <div class="input-group">
+                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
+                    </div>
+                    <datalist id="search_terms">
+                        <option value="Products">
+                        <option value="New orders">
+                        <option value="Apple iphone">
+                        <option value="Ahmed Hassan">
+                    </datalist>
+                </form>
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon" href="#">
+                            <i class="material-icons md-notifications animation-shake"></i>
+                            <span class="badge rounded-pill">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
+                            <a class="dropdown-item text-brand" href="#"><img src="/adminassets/imgs/theme/flag-us.png" alt="English">English</a>
+                            <a class="dropdown-item" href="#"><img src="/adminassets/imgs/theme/flag-fr.png" alt="Français">Français</a>
+                            <a class="dropdown-item" href="#"><img src="/adminassets/imgs/theme/flag-jp.png" alt="Français">日本語</a>
+                            <a class="dropdown-item" href="#"><img src="/adminassets/imgs/theme/flag-cn.png" alt="Français">中国人</a>
+                        </div>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="/adminassets/imgs/people/avatar2.jpg" alt="User"></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <section class="content-main">
+            <div class="row">
+                <div class="col-9">
+                    <div class="content-header">
+                        <h2 class="content-title">Add New Product</h2>
+                        
+                    </div>
+                </div>
+                <span><p style="color: red;"><%= exist %></p></span>
+                <!-- add product -->
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Basic</h4>
+                        </div>
+                        <div class="card-body">
+                            <!-- add product -->
+                            <form action="/admin/insert-product" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Product title</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="product_name" name="title">
+                                    <span style="color: red;" id="titleError"></span>
+                                </div>
+    
+                                <div class="mb-4">
+                                    <label class="form-label">Full description</label>
+                                    <textarea placeholder="Type here" class="form-control" rows="4" name="description" id="description"></textarea>
+                                      <span style="color: red;" id="descriptionError"></span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Price</label>
+                                            <div class="row gx-2">
+                                                <input placeholder="$" type="text" class="form-control" name="price" id="price">
+                                                <span style="color: red;" id="priceError"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Category</label>
+                                            <select class="form-control" name="category" id="category">
+                                                <option selected>Choose...</option>
+                                                
+                                                <% categories.forEach(function(category) { %>
+                                                    <% if(category.isListed===true) { %>
+                                                    <option value="<%= category.id %>"><%= category.categoryName %></option>
+                                                    <% } %>
+                                                <% }); %>    
+                                            </select>
+                                            <span style="color: red;" id="categoryError"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label class="form-label">Stock</label>
+                                        <input placeholder type="text" class="form-control" name="stock" id="stock">
+                                        <span style="color: red;" id="stockError"></span>
+                                    </div>
+                                    
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Discount</label>
+                                    <input type="text" placeholder="%" class="form-control" id="discount" name="discount">
+                                </div>
+                                <span style="color: red;" id="discountError"></span>
+                                <p>coverImage</p>
+                                <input type="file" name="coverImage" style="display: block; margin-bottom: 20px;" id="coverImage" accept="image/*">
+                                <span style="color: red;" id="imageError"></span>
+                                <p>Images</p>
+                                <input type="file" id="productImages" name="productImages" accept="image/*" multiple>
+                                <span style="color: red;" id="imagesError"></span>
+                                <button  type="submit">Add Product</button>
+                            </form>
+                            
+                            <!-- add product form end -->
+                        </div>
+                    </div>
+                </div>
+
+               
+            </div>
+        </section> <!-- content-main end// -->
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                    document.write(new Date().getFullYear())
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+
+    <script>
+        function validateForm() {
+            var title = document.getElementById("product_name").value;
+            var description = document.getElementById("description").value;
+            var price = document.getElementById("price").value;
+            var stock = document.getElementById("stock").value;
+            var discount = document.getElementById("discount").value;
+            var coverImage = document.getElementById("coverImage").value;
+            var productImages = document.getElementById("productImages").value;
+            var categorySelect = document.getElementById('category');
+            var categoryError = document.getElementById('categoryError');
+    
+            // Clear previous error messages
+            document.getElementById('titleError').textContent = '';
+            document.getElementById('descriptionError').textContent = '';
+            document.getElementById('priceError').textContent = '';
+            document.getElementById('stockError').textContent = '';
+            document.getElementById('discountError').textContent = '';
+            document.getElementById('imageError').textContent = '';
+            document.getElementById('imagesError').textContent = '';
+            categoryError.textContent = '';
+    
+            // Validate title
+            if (title.trim() === '') {
+                document.getElementById('titleError').textContent = 'Enter title';
+                return false;
+            }
+    
+            // Validate description
+            if (description.trim() === '') {
+                document.getElementById('descriptionError').textContent = 'Enter description';
+                return false;
+            }
+
+            if (price.trim() === '') {
+    document.getElementById('priceError').textContent = 'Please fill in the price';
+    return false;
+}
+    
+            // Validate price
+            if (isNaN(price) || price < 0) {
+                document.getElementById('priceError').textContent = 'Price must be a non-negative digit';
+                return false;
+            }
+    
+            // Validate category
+            if (categorySelect.value === 'Choose...') {
+                categoryError.textContent = 'Please select a category.';
+                return false;
+            }
+    
+            // Validate stock
+            if (stock.trim() === '') {
+                document.getElementById('stockError').textContent = 'Please fill in the stock';
+                return false;
+            }
+    
+            if (isNaN(stock) || stock < 0) {
+                document.getElementById('stockError').textContent = 'Stock must be a non-negative digit';
+                return false;
+            }
+    
+            // Validate discount
+            if (discount.trim() === '') {
+                document.getElementById('discountError').textContent = 'Please fill in the discount';
+                return false;
+            }
+    
+            if (discount > 100 || discount < 0) {
+                document.getElementById('discountError').textContent = 'Invalid value. Discount should be between 0 and 100.';
+                return false;
+            }
+    
+            // Validate coverImage and productImages formats
+            if (!validateFileFormat(coverImage, ["jpg", "jpeg", "png"]) || !validateFileFormat(productImages, ["jpg", "jpeg", "png"])) {
+                document.getElementById('imageError').textContent = 'Invalid file format for coverImage or productImages. Only JPG, JPEG, and PNG are allowed.';
+                return false;
+            }
+    
+            return true;
+        }
+    
+        function validateFileFormat(inputValue, allowedFormats) {
+            var fileExtension = inputValue.split('.').pop().toLowerCase();
+            return allowedFormats.includes(fileExtension);
+        }
+    </script>
+
+    <%- include('../ADMIN/ADMINPARTIAL/footer') %>

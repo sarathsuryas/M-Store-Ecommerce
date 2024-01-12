@@ -1,0 +1,23 @@
+
+    .swal2-container-custom {
+        font-family: 'Arial', sans-serif;
+    }
+
+    .swal2-title-custom {
+        color: #333;
+    }
+
+    .swal2-confirm-button-custom {
+        background-color: #4caf50;
+        color: white;
+    }
+
+    .swal2-cancel-button-custom {
+        background-color: #d33;
+        color: white;
+    }
+
+    .swal2-input-custom {
+        margin-top: 10px;
+    }
+

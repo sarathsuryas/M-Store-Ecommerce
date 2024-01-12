@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>M Store - Monthly Sales Report</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+
+    <style>
+        body {
+            padding-top: 60px;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        .mt-4 {
+            margin-top: 1.5rem;
+        }
+
+        .float-right {
+            float: right;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="mt-4 mb-4">M Store</h1>
+        <h2 class="mb-4">Monthly Sales Report</h2>
+    
+        <button id="printInPdf" class="btn btn-primary float-right mb-2" style="margin-left: 20px">Print Report In Pdf</button>
+        <button id="printInExcel" class="btn btn-primary float-right mb-2">Print Report In Excel</button>
+    
+        <div class="clearfix"></div>
+        
+        <div class="mt-4">
+            <p>Date: <span id="date"><%= formattedDateRange %></span></p>
+            <p>Total Orders: <span id="total-orders"><%= totalOrders %></span></p>
+            <p>Total Sales: <span id="total-sales">₹<%= totalSales %></span></p>
+        </div>
+    </div>
+    
+    
+        <table class="table mt-4">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Date</th>
+                    <th>Order ID</th>
+                    <th>Product Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody id="sales-data">
+              <% monthlySales.forEach(item=> { %>  
+                  <% item.products.forEach(product =>  { %>
+                    <tr>
+                    <td><%= item.date.toLocaleString() %></td>
+                    <td><%= item.orderId %></td>  
+                     <td><%= product.productId.title %></td>
+                     <td><%= product.total %> </td>
+                     <td><%= product.quantity %></td>
+                     </tr>
+                       <% }) %>
+               <% }) %> 
+            </tbody>
+        </table>
+    </div>
+    <!-- print in pdf -->
+    <script>
+     const printInPdf = document.getElementById('printInPdf')
+     printInPdf.addEventListener("click" , function(){
+        window.print()
+     })
+    </script>
+    <!-- print in excel -->
+    
+    
+    <script>
+        const printInExcel = document.getElementById('printInExcel');
+        const salesData = JSON.parse('<%- jsonString %>')
+        
+        printInExcel.addEventListener("click", function () {
+            // Create a new workbook
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(salesData);
+    
+            // Add the worksheet to the workbook
+            XLSX.utils.book_append_sheet(wb, ws, 'SalesData');
+    
+            // Save the workbook as an Excel file
+            XLSX.writeFile(wb, 'sales_data.xlsx');
+        });
+    </script>
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>
