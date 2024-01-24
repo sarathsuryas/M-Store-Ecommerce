@@ -6,13 +6,16 @@ const productManagement = require('../Controller/adminProductManagement')
 const categoryMangement = require('../Controller/adminCategoryManagement')
 const orderManagement = require('../Controller/adminOrderManagement')
 const couponManagement = require('../Controller/adminCouonManagement')
+const verifyAdmin = require('../middleware/admin/adminJwt')
+const adminLoggedIn = require('../middleware/admin/adminLoggedIn')
 // const adminsignin = router.get('/signin',admincontroller.adminsignin)
 
 // const signupsub = router.post('/signupsub',admincontroller.signupsub)
 // login
-router.get('/',admincontroller.adminlogin)
+router.get('/',adminLoggedIn,admincontroller.adminlogin)
 router.post('/loginsub',admincontroller.loginsub)
-router.get('/adminhome',admincontroller.adminhome)
+router.get('/adminhome',verifyAdmin,admincontroller.adminhome)
+router.get('/logOut',admincontroller.logOut)
 
 // user management
 router.get('/userslist',admincontroller.userslist)

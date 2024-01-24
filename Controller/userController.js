@@ -9,11 +9,11 @@ const Order = require('../model/orderSchema')
 const nodemailer = require('nodemailer')
 const cookie = require('cookie');
 const jwt = require('jsonwebtoken')
+const secretKey = process.env.ACCESS_TOKEN_SECRET
 const bcrypt = require('bcrypt');
 var randtoken = require('rand-token');
 const Coupon = require('../model/couponSchema');
 const Wallet = require('../model/walletSchema')
-const secretKey = process.env.ACCESS_TOKEN_SECRET
 //function to generate a random OTP
 const generateOTP = () => {
   return Math.floor(1000 + Math.random() * 9000).toString();

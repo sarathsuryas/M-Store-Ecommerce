@@ -4,6 +4,9 @@ const {User} = require('../model/userschema')
 const Order = require('../model/orderSchema')
 const Product = require('../model/productSchema')
 const Category = require('../model/categorySchema')
+const cookie = require('cookie');
+const jwt = require('jsonwebtoken')
+const secretKey = process.env.ACCESS_TOKEN_SECRET
 const bcrypt = require('bcrypt')
 
 // const adminsignin =async (req,res,next) =>{
@@ -76,7 +79,7 @@ try{
 // Case insensitive search in the database
 const regexEmail = new RegExp(enteredEmail, 'i'); // 'i' for case insensitive
 const mail = await Admin.findOne({email: {$regex: regexEmail}});
- 
+ const {email} = mail
 if(!mail){
   
   req.session.message = 'email is wrong'
@@ -94,6 +97,12 @@ bcrypt.compare(enteredPassword,password,(err,result)=>{
     return
   }
   if(result){
+   
+      //generate JWT
+      const adminToken = jwt.sign({admin:email }, secretKey, { expiresIn: '3h' });
+      //set the token as cookie
+      res.setHeader('Set-Cookie', cookie.serialize('adminToken', adminToken, { httpOnly: true, maxAge: 3600, path: '/admin' }))
+      
     return res.redirect('/admin/adminhome')
   }else{
     req.session.message = 'Password is wrong'
@@ -105,6 +114,12 @@ catch(error){
 console.log(error);
 }
 }
+
+const logOut = async (req, res) => {
+  res.clearCookie('adminToken', { path: '/admin' }); // replace 'jwtToken' with the name of your cookie
+  return res.redirect('/admin');
+}
+
 
 const userslist = async (req,res) =>{
   try{
@@ -292,4 +307,4 @@ const salesReportMonthly = async (req,res) => {
 }
 
 
-module.exports = {adminlogin,adminhome,loginsub,userslist,blockuser,unblockuser,  salesReportDaily, salesReportWeekly, salesReportMonthly}
+module.exports = {adminlogin,adminhome,loginsub,userslist,blockuser,unblockuser,  salesReportDaily, salesReportWeekly, salesReportMonthly,logOut}
