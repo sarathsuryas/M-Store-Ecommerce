@@ -7,7 +7,6 @@ function adminLoggedIn  (req, res, next)  {
   jwt.verify(adminToken, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
       console.log("error");
-
       next();
     }
     req.admin = decoded;

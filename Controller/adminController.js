@@ -48,21 +48,148 @@ const adminlogin = async (req,res,next) => {
   
 }
 
-const adminhome = async (req,res,next) => {
-try {
-  const users = await User.find()
-  const orders = await Order.find()
-  const categories = await Category.find()
-  const totalSales =  orders.reduce((a,v)=>{
-   return a+v.totalAmount
-  },0)
-  const products = await Product.find()
-  return res.render('ADMIN/adminhome',{users,totalSales,products,orders,categories})
-} catch (error) {
-  console.error(error)
-  return res.send('internal sever error')
+// const adminhome = async (req,res,next) => {
+//   try {
+    
+//     const totalSales =  orders.reduce((a,v)=>{
+//      return a+v.totalAmount
+//     },0)
+    
+//     return res.render('ADMIN/adminhome',{users,totalSales,products,orders,categories})
+//   } catch (error) {
+//     console.error(error)
+//     return res.send('internal sever error')
+//   }
+//   }
+
+const adminhome = async (req, res)=>{
+  try{
+    const orderDetails = await Order.find().populate('userId')
+    const [{totalAmount}]= await Order.aggregate([
+      {
+        $match: {
+          paymentStatus: "success",
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$totalAmount" },
+        },
+      },
+    ]);
+    console.log(totalAmount);
+    const totalOrders = await Order.find()
+    const totalProducts = await Product.find()
+    const totalCategories= await Category.find();
+    const users= await User.find()
+    const statistics={
+      totalAmount,
+      totalOrders:totalOrders.length,
+      totalProducts:totalProducts.length,
+      totalCategories:totalCategories.length,
+      totalUsers:users.length,
+    }
+
+    const weeklyData = await Order.aggregate([
+      {
+        $group: {
+          _id: { $week: '$date' },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          count: { $ifNull: ['$count', 0] },
+        },
+      },
+    ]);
+
+    const yearlyData = await Order.aggregate([
+      {
+        $group: {
+          _id: { $year: '$date' },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          count: { $ifNull: ['$count', 0] },
+        },
+      },
+    ]);
+  
+    const monthlyData = await Order.aggregate([
+      {
+        $group: {
+          _id: { $month: '$date' },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          count: { $ifNull: ['$count', 0] },
+        },
+      },
+    ]);
+    
+    // Assuming you already have orderData, fill in zeroes for missing months for cancels and returns
+    const filledOrderDataWeekly =  fillDataWithZeroesWeek(weeklyData);
+    const filledOrderDataMonthly = fillDataWithZeroesMonth(monthlyData);
+    const filledOrderDataYearly = fillDataWithZeroesYear(yearlyData);
+    
+    // Combine all the data to be sent to the client
+    
+    
+    function fillDataWithZeroesWeek(data) {
+      const labels = Array.from({ length: 12 }, (_, index) => index + 1);
+      return labels.map((week) => {
+        const existingWeek = data.find((item) => item._id === week);
+        return { _id: week, count: existingWeek ? existingWeek.count : 0 };
+      });
+    }
+    
+    function fillDataWithZeroesMonth(data) {
+      const labels = Array.from({ length: 12 }, (_, index) => index + 1);
+      return labels.map((month) => {
+        const existingMonth = data.find((item) => item._id === month);
+        return { _id: month, count: existingMonth ? existingMonth.count : 0 };
+      });
+    }
+
+    // Starting month is November (index 10 in JavaScript Date object)
+    const startingMonth = 10;
+
+    function fillDataWithZeroesYear(data) {
+      const labels = Array.from({ length: 12 }, (_, index) => index + 1);
+      return labels.map((year) => {
+        const existingYear = data.find((item) => item._id === year);
+        return { _id: year, count: existingYear ? existingYear.count : 0 };
+      });
+    }
+    
+    
+    // Create an array of labels covering the entire range
+    const labels = Array.from({ length: 12 }, (_, index) => (index + startingMonth) % 12 + 1);
+  
+    const chartFeeder = {
+      weeklySales: filledOrderDataWeekly,
+      monthlySales: filledOrderDataMonthly,
+      yearlySales: filledOrderDataYearly,
+    };
+    console.log(chartFeeder);
+    res.render("ADMIN/adminhome", { orderDetails, statistics, chartFeeder: JSON.stringify(chartFeeder) });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).render("ADMIN/404", {
+      message: "An error happened !",
+      errorMessage: err.message,
+    });
 }
-}
+};
 
 const loginsub =async (req,res) =>{
 
