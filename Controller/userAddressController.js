@@ -2,7 +2,7 @@
 const Address = require('../model/addressSchema')
 
 
-const addAddress = async (req, res) => {
+const addAddress = async (req, res,next) => {
   try {
     const userId = req.user.user._id
     const { username, phoneNumber, pincode, locality, address, selectedState, altPhone, city } = req.body
@@ -35,14 +35,13 @@ const addAddress = async (req, res) => {
     await userAddress.save();
     return res.redirect('/cart/checkout')
 
-  } catch (error) {
-    console.log(error.message);
-    res.json({ status: 'error' });
+  } catch (err) {
+    next(err); // Pass the error to the next middleware
   }
 }
 
 
-const addAddressFromProfile = async (req, res) => {
+const addAddressFromProfile = async (req, res,next) => {
   try {
     const userId = req.user.user._id
     const { username, phoneNumber, pincode, locality, address, selectedState, altPhone, city } = req.body
@@ -75,13 +74,12 @@ const addAddressFromProfile = async (req, res) => {
     await userAddress.save();
     return res.redirect('/user-profile')
 
-  } catch (error) {
-    console.log(error.message);
-    res.json({ status: 'error' });
+  } catch (err) {
+    next(err); // Pass the error to the next middleware
   }
 }
 
-const editAddress = async (req,res)=>{
+const editAddress = async (req,res,next)=>{
   try{
     const userId = req.user.user._id
     const addressId = req.params.id;
@@ -90,14 +88,13 @@ const editAddress = async (req,res)=>{
     
     return res.render('USER/editAddress',{addressData:result[0]})
   
-  }catch (error) {
-      console.log(error.message);
-      res.json({ status: 'error' });
+  }catch (err) {
+    next(err); // Pass the error to the next middleware
     }
     
   }
 
-  const editAddressData = async (req,res) =>{
+  const editAddressData = async (req,res,next) =>{
     try{
       const userId = req.user.user._id
       const addressId = req.params.id
@@ -131,9 +128,8 @@ const editAddress = async (req,res)=>{
     }
   
   
-    }catch (error) {
-      console.log(error.message);
-      res.json({ status: 'error' });
+    }catch (err) {
+      next(err); // Pass the error to the next middleware
     }
   }
 

@@ -3,7 +3,7 @@ const Category = require('../model/categorySchema')
 const Product = require('../model/productSchema')
 
 
-const productManagement = async(req,res)=>{
+const productManagement = async(req,res,next)=>{
 
   try{
 
@@ -32,26 +32,24 @@ const productManagement = async(req,res)=>{
   //   }).exec();
     const exist = req.session.exist;
     return res.render('ADMIN/productManagement',{categories,products,exist, totalPages, page})
-  }catch(error){
-    console.error('Error in productManagement:', error);
-        return res.status(500).send('Internal Server Error');
+  }catch(err){
+    next(err); // Pass the error to the next middleware
   }
 }
 
-const addProduct = async (req,res) =>{
+const addProduct = async (req,res,next) =>{
   try {
     const categories = await Category.find()
     const exist = req.session.exist
   delete req.session.exist
      return res.render('ADMIN/addProduct',{exist,categories})
-  } catch (error) {
-    console.error(error)
-    return res.json({message:'internal server error'})
+  } catch (err) {
+    next(err); // Pass the error to the next middleware
   }
   
 }
 
-const insertProduct = async (req,res) =>{
+const insertProduct = async (req,res,next) =>{
   
   const title = req.body.title;
   const regexTitle = new RegExp(title, 'i'); // 'i' for case insensitive
@@ -92,13 +90,12 @@ await product.save()
     }).exec();
 
  return res.redirect('/admin/productmanagement')
-}catch(error){
-  console.error(error);
-  return res.status(500).json({success:false, error: 'Internal server error' });
+}catch(err){
+  next(err); // Pass the error to the next middleware
 }
 }
 
-const productPublish = async(req,res) =>{
+const productPublish = async(req,res,next) =>{
   const productId = req.params.id;
   try{
     const products = await Product.findById(productId)
@@ -113,14 +110,13 @@ const productPublish = async(req,res) =>{
     await products.save()
     return res.status(200).json({success:true,message:'success true'})
     }
-    catch(error){
-      console.error(error);
-          return res.status(500).json({success:false, error: 'Internal server error' });
+    catch(err){
+      next(err); // Pass the error to the next middleware
     }
   
   }
 
-  const editProduct = async (req,res) =>{
+  const editProduct = async (req,res,next) =>{
     const productId = req.params.id;
     const categories = await Category.find();
     console.log(categories);
@@ -128,7 +124,7 @@ const productPublish = async(req,res) =>{
        return res.render('ADMIN/editProduct',{categories,products})
   }
 
-  const editedProduct = async (req, res) => {
+  const editedProduct = async (req, res, next) => {
     const { id, title, description, price, category, stock, discount } = req.body;
      try{
   
@@ -157,13 +153,12 @@ const productPublish = async(req,res) =>{
       return res.redirect('/admin/productmanagement')
      }
   
-     }catch(error){
-     console.error(error);
-     return res.status(500).json({success:false,error:'Internal server error'})
+     }catch(err){
+      next(err); // Pass the error to the next middleware
      }
   };
 
-  const deleteImage =  async (req,res) =>{
+  const deleteImage =  async (req,res,next) =>{
     try {
       const {productId,index} = req.body
       console.log(req.body)
@@ -171,9 +166,8 @@ const productPublish = async(req,res) =>{
       product.productImages.splice(index,1)
       await product.save()
       return res.status(200).json({success:true})
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({message:"internal server error"})
+    } catch (err) {
+      next(err); // Pass the error to the next middleware
     }
   }
 

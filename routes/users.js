@@ -11,7 +11,8 @@ const  checkLoggedIn = require("../middleware/user/forLoggedIn")
 
 /* GET users listing. */
 // user authentications
-router.get('/',checkLoggedIn,usercontroller.userlogin)
+router.get('/',checkLoggedIn,usercontroller.landingPage)
+router.get('/get-login',checkLoggedIn,usercontroller.userlogin)
 router.post('/loginsub',usercontroller.loginsub)
 router.get('/userhomeget',authenticate,usercontroller.userhome)
 router.get('/logout',usercontroller.logout)

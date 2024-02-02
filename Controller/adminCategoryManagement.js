@@ -4,7 +4,7 @@ const Product = require('../model/productSchema')
 
 
 
-const productcategories  = async (req,res) =>{
+const productcategories  = async (req,res,next) =>{
   try{
     const page = parseInt(req.query.page) || 1;
 const no_of_docs_each_page = 4;
@@ -16,30 +16,34 @@ const  categories  = await Category.find().skip(skip).limit(no_of_docs_each_page
 const catexist = req.session.catexist;
 return res.render('ADMIN/productcategories',{categories,catexist,totalPages,page})
   }catch(error){
-    console.log(error);
+    next(error)
   }
 }
 
-const addcat = async (req,res) =>{
-  const {name,description} = req.body;
+const addcat = async (req,res,next) =>{
   
-  const regexTitle = new RegExp(name, 'i'); // 'i' for case insensitive
-  const category = await Category.findOne({categoryName: {$regex: regexTitle}});
-  if(category){
-    req.session.catexist = 'category exist'
-  return res.redirect('/admin/productcategories')
-  }
   try{
+    const {name,description} = req.body;
+  
+    const regexTitle = new RegExp(name, 'i'); // 'i' for case insensitive
+    const category = await Category.findOne({categoryName: {$regex: regexTitle}});
+    if(category){
+      req.session.catexist = 'category exist'
+    return res.redirect('/admin/productcategories')
+    }
+
+
+
    const data = await Category.create({categoryName:name,description:description})
    req.session.catexist = ''
    return res.redirect('/admin/productcategories')
-  }catch(error){
-    console.log(error);
+  }catch(err){
+    next(err)
   }
   }
 
   //publish and unpublish category
-const publish = async (req,res) =>{
+const publish = async (req,res,next) =>{
   const categoryId = req.params.id;
 
   try{
@@ -63,13 +67,12 @@ const publish = async (req,res) =>{
       return res.status(200).json({success:true,message:'success true'})  
   }
   catch(error){
-    console.error(error);
-    return res.status(500).json({success:false,error:'Internal server error'})
+    next(error)
   }
 }
 
 
-const updateCat = async (req,res) =>{
+const updateCat = async (req,res,next) =>{
   try{
 const categoryId = req.params.id;
 const details = await Category.findById(categoryId)
@@ -77,12 +80,12 @@ const existing = req.session.existing
 
   return res.render('ADMIN/updatingCategories',{details,existing})
   }catch(error){
-    console.error(error);
+    next(error)
 
   }
 }
 
-const updatedCat = async (req,res) =>{
+const updatedCat = async (req,res,next) =>{
   const {id,categoryname,description} = req.body;
   try{
    
@@ -94,8 +97,7 @@ const updatedCat = async (req,res) =>{
      
    return res.redirect('/admin/productcategories')
   } catch (error) {
-   console.error(error);
-  return res.status(500).json({ error: 'Internal Server Error' });
+   next(error)
      }
  }
 

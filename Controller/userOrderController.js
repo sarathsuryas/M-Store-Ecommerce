@@ -104,9 +104,8 @@ products.forEach(async (product, index) => {
 
   
     return res.status(200).json({ succes: true })
-  } catch (error) {
-    console.error(error)
-    return res.json(error, 'internal server error')
+  } catch (err) {
+    next(err); // Pass the error to the next middleware
   }
 }
 
@@ -213,9 +212,8 @@ const placeOrderOnlinePayment = async (req,res) =>{
       return res.status(200).json({ succes: true , razorOrder,key_id,secret_key})
     });
     
-  } catch (error) {
-    console.error(error)
-    return res.json(error, 'internal server error')
+  } catch (err) {
+    next(err); // Pass the error to the next middleware
   }
 }
 
@@ -256,9 +254,8 @@ products.forEach(async (product, index) => {
   }
    return res.redirect('/cart/checkout')
    
-  } catch (error) {
-    console.error(error)
-      return res.json(error, 'internal server error')
+  } catch (err) {
+    next(err); // Pass the error to the next middleware
   }
   }
 
@@ -370,9 +367,8 @@ products.forEach(async (product, index) => {
    }else{
      return res.status(202).json({success:true})
    }
-    } catch (error) {
-     console.error(error)
-     return res.json(error, 'internal server error')
+    } catch (err) {
+      next(err); // Pass the error to the next middleware
     }
  }
 
@@ -390,9 +386,8 @@ const orderDetailedView = async(req,res) =>{
    }
  //  console.log(order)
   return res.render('USER/orderDetailedView',{order})
-  }catch(error){
-   console.error(error);
-   return res.status(500).json({err:'internal server error'})
+  }catch(err){
+    next(err); // Pass the error to the next middleware
   }
  }
 
@@ -428,9 +423,8 @@ if(order.paymentStatus==="success"){
 
 return res.status(200).json({success:true})
   // console.log(e);
-  }catch (error) {
-    console.log(error.message);
-    res.json({ status: 'error' });
+  }catch (err) {
+    next(err); // Pass the error to the next middleware
   }
 }
  

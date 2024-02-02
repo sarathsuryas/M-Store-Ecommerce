@@ -13,8 +13,19 @@ const secretKey = process.env.ACCESS_TOKEN_SECRET
 const bcrypt = require('bcrypt');
 var randtoken = require('rand-token');
 const Coupon = require('../model/couponSchema');
-const Wallet = require('../model/walletSchema')
+const Wallet = require('../model/walletSchema');
+const { resetPasswordSubmit } = require('./userPasswordReset');
 //function to generate a random OTP
+
+const landingPage = async (req,res,next) =>{
+  try {
+    return res.render('USER/landingPage')
+  } catch (error) {
+    next(error)
+  }
+}
+
+
 const generateOTP = () => {
   return Math.floor(1000 + Math.random() * 9000).toString();
 };
@@ -41,30 +52,34 @@ const userSignup = async (req, res) => {
 }
 
 
-const signupsub = async (req, res) => {
+const signupsub = async (req, res,next) => {
 
-  const { username, email, password ,phone} = req.body;
-  req.session.data = { username, email, password ,phone }
-
-
-
-  const data = await User.findOne({ email: email });
-  if (data) {
-    req.session.signup = 'Email already Exists please login'
-    return res.redirect('/signup')
-  }
-  //console.log(req.session.data);
-
-  //configure nodemailer
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.email,
-      pass: process.env.password
-    }
-  })
+  
 
   try {
+    const { username, email, password ,phone} = req.body;
+    req.session.data = { username, email, password ,phone }
+  
+  
+  
+    const data = await User.findOne({ email: email });
+    if (data) {
+      req.session.signup = 'Email already Exists please login'
+      return res.redirect('/signup')
+    }
+    //console.log(req.session.data);
+  
+    //configure nodemailer
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.email,
+        pass: process.env.password
+      }
+    })
+
+
+
     //Generate and store OTP
     const otp = generateOTP();
     console.log('Before findOneAndUpdate');
@@ -93,8 +108,7 @@ const signupsub = async (req, res) => {
     //res.status(200).json({ message: 'OTP sent to your email. Please enter the OTP to complete signup.' });
 
   } catch (error) {
-    console.error('Error sending OTP:', error);
-    res.status(500).json({ error: 'Internal server error' });
+   next(error)
   }
 
 }
@@ -495,4 +509,4 @@ const applyCoupon = async (req,res) =>{
 }
 
 
-module.exports = { userlogin, signupsub, userhome, userauth, loginsub, purchaseProduct, shop, userSignup,  userProfile, editUserDetails,logout,searchProduct,otpModal,applyCoupon,searchInput,searchResult}
+module.exports = { userlogin, signupsub, userhome, userauth, loginsub, purchaseProduct, shop, userSignup,  userProfile, editUserDetails,logout,searchProduct,otpModal,applyCoupon,searchInput,searchResult,landingPage}

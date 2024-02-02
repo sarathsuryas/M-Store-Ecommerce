@@ -62,7 +62,7 @@ const adminlogin = async (req,res,next) => {
 //   }
 //   }
 
-const adminhome = async (req, res)=>{
+const adminhome = async (req, res ,next)=>{
   try{
     const orderDetails = await Order.find().populate('userId')
     const [{totalAmount}]= await Order.aggregate([
@@ -78,7 +78,7 @@ const adminhome = async (req, res)=>{
         },
       },
     ]);
-    console.log(totalAmount);
+   
     const totalOrders = await Order.find()
     const totalProducts = await Product.find()
     const totalCategories= await Category.find();
@@ -180,18 +180,14 @@ const adminhome = async (req, res)=>{
       monthlySales: filledOrderDataMonthly,
       yearlySales: filledOrderDataYearly,
     };
-    console.log(chartFeeder);
+    
     res.render("ADMIN/adminhome", { orderDetails, statistics, chartFeeder: JSON.stringify(chartFeeder) });
   } catch (err) {
-    console.error(err);
-    return res.status(500).render("ADMIN/404", {
-      message: "An error happened !",
-      errorMessage: err.message,
-    });
+    next(err); // Pass the error to the next middleware
 }
 };
 
-const loginsub =async (req,res) =>{
+const loginsub =async (req,res,next) =>{
 
   
 try{
@@ -237,8 +233,8 @@ bcrypt.compare(enteredPassword,password,(err,result)=>{
   }
     });
 }
-catch(error){
-console.log(error);
+catch(err){
+  next(err); // Pass the error to the next middleware
 }
 }
 
@@ -248,7 +244,7 @@ const logOut = async (req, res) => {
 }
 
 
-const userslist = async (req,res) =>{
+const userslist = async (req,res,next) =>{
   try{
 const page = parseInt(req.query.page) || 1;
 const no_of_docs_each_page = 5;
@@ -257,13 +253,13 @@ const totalPages = Math.ceil(totalUsers / no_of_docs_each_page)
 const skip = (page - 1) * no_of_docs_each_page
 const users = await User.find().skip(skip).limit(no_of_docs_each_page)
 return res.render('ADMIN/userslist',{users,page,totalPages})
-}catch(error){
-console.error(error);
-return res.status(500).json({error:'Internal server error'})
-   }
+}catch(err){
+
+next(err); // Pass the error to the next middleware
+}
 }
 
-const blockuser = async (req,res) =>{
+const blockuser = async (req,res,next) =>{
 
 const userId = req.params.userId;
 console.log(userId);
@@ -276,13 +272,12 @@ try{
   user.isBlocked = true;
   await user.save();
   return res.status(200).json({success:true,message:'sucess true'})
-}catch(error){
-  console.error(error);
-      return res.status(500).json({success:false, error: 'Internal server error' });
+}catch(err){
+  next(err); // Pass the error to the next middleware
 }
 }
 
-const unblockuser = async (req,res) =>{
+const unblockuser = async (req,res,next) =>{
 const userId = req.params.userId
 
 try{
@@ -295,13 +290,12 @@ try{
 
   return res.status(200).json({success:true,message:'sucess true'})
 }catch(error){
-  console.error(error);
-      return res.status(500).json({success:false, error: 'Internal server error' });
+  next(err); // Pass the error to the next middleware
 }
 }
 
 
-const salesReportDaily = async (req,res) =>{
+const salesReportDaily = async (req,res,next) =>{
   try {
     
     const currentDate = new Date()
@@ -339,13 +333,13 @@ const salesReportDaily = async (req,res) =>{
      let jsonString = JSON.stringify(salesData);
   
     return res.render('ADMIN/dailySalesReport',{dailySales, formattedDate, totalOrders, totalSales , jsonString})
-  } catch (error) {
-    console.error(error)
-    return res.status(500).send('internal server error')
+  } catch (err) {
+    next(err); // Pass the error to the next middleware
+
   }
 }                                                           
                                                                         
-const salesReportWeekly = async (req,res) =>{
+const salesReportWeekly = async (req,res,next) =>{
   try {
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0); // Set time to the beginning of the day
@@ -383,13 +377,13 @@ const salesReportWeekly = async (req,res) =>{
      let jsonString = JSON.stringify(salesData);
     console.log(weeklySales);
     return res.render('ADMIN/weeklySalesReport',{ weeklySales, formattedDateRange, totalOrders, totalSales, jsonString })
-  } catch (error) {
-    console.error(error)
-    return res.status(500).send('internal server error')
+  } catch (err) {
+    next(err); // Pass the error to the next middleware
+
   }
 }
 
-const salesReportMonthly = async (req,res) => {
+const salesReportMonthly = async (req,res,next) => {
   try {
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0); // Set time to the beginning of the day
@@ -427,9 +421,8 @@ const salesReportMonthly = async (req,res) => {
      let jsonString = JSON.stringify(salesData);
  
     return res.render('ADMIN/monthlySalesReport',{ monthlySales, formattedDateRange, totalOrders, totalSales, jsonString })
-  } catch (error) {
-    console.error(error)
-    return res.status(500).send('internal server error')
+  } catch (err) {
+    next(err); // Pass the error to the next middleware
   }
 }
 

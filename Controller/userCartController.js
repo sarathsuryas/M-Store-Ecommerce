@@ -8,14 +8,15 @@ const cart = (req,res) =>{
   return res.render('USER/cart')
 }
 
-const addToCart = async  (req,res) =>{
-const {productId,quantity} = req.body
-const userId = req.user.user._id;
+const addToCart = async  (req,res,next) =>{
 
+const {productId,quantity} = req.body
+
+const userId = req.user.user._id;
 
 try{
   const product = await Product.findById(productId)
-  
+ 
   if(product.stock!==0){
 
   //find the user's cart or create a new one if it does not exist
@@ -29,12 +30,15 @@ try{
   return v.productId.toString() === productId
  })
  if(quantityCheck){
+  
   if(quantityCheck.quantity>product.stock ){
     return res.status(202).json({success:true})
   }
 }
 
+
 if(quantityCheck){
+  
  if(quantityCheck.quantity < product.stock){
   
   //check if the product is already in the cart 
@@ -50,8 +54,6 @@ if(quantityCheck){
     //total cart price
    
      
-    
-
   } else {
     // If the product is not in the cart add it 
     cart.products.push({
@@ -114,10 +116,11 @@ await cart.save()
 return res.status(200).json({success:true,cart})
  
 }
+  }else if (product.stock <= 0){
+       return res.status(202).json({success:true})
   }
-}catch(error){
-console.error(error);
-res.status(500).json({success:false,message:'Internal server error'})
+}catch(err){
+  next(err); // Pass the error to the next middleware
 }
 }
 // Helper function to calculate the total for a product 
@@ -145,13 +148,12 @@ const calculateProductTotal = async (productId,quantity) =>{
     // }
 
 
-  } catch (error){
-    console.error(error);
-    throw new Error('Error calculating product total')
+  } catch (err){
+    next(err); // Pass the error to the next middleware
   }
 }
 
-const goToCart = async (req,res) => {
+const goToCart = async (req,res,next) => {
   const userId = req.user.user._id;
   try {
     const cartOfTheUser = await Cart.findOne({userId:userId}).populate('products.productId')
@@ -159,9 +161,8 @@ const goToCart = async (req,res) => {
     const date = new Date()
     
     return res.render('USER/cart', {cart:cartOfTheUser,coupon,date});
-  } catch(error) {
-    console.error(error);
-    res.status(500).json({success:false,message:'Internal server error'});
+  } catch(err) {
+    next(err); // Pass the error to the next middleware
   }
 };
 
@@ -228,14 +229,12 @@ try{
 
 return res.status(200).json(response);
 
-}catch(error){
-  console.error(error)
-return res.status(500).json({success:false,error:'internal server error'})
-
+}catch(err){
+  next(err); // Pass the error to the next middleware
 }
 }
 
-const deleteCart = async (req,res) =>{
+const deleteCart = async (req,res,next) =>{
 const userId = req.user.user._id
 const {productId} = req.body
   try{
@@ -254,12 +253,12 @@ const {productId} = req.body
    await cart.save()
    return res.status(200).json({success:true})
     }
-  }catch(error){
-    res.status(500).json({error:'internal server error'})
+  }catch(err){
+    next(err); // Pass the error to the next middleware
   }
 }
 
-const checkout = async (req,res) =>{
+const checkout = async (req,res,next) =>{
   const userId = req.user.user._id;
   try{
     
@@ -270,8 +269,8 @@ const checkout = async (req,res) =>{
     const address = await Address.findOne({userId:userId})
     
 return res.render('USER/checkout2',{cart,address,couponCode})
-  }catch(error){
-    res.status(500).json({message:'internal server error'})
+  }catch(err){
+    next(err); // Pass the error to the next middleware
   }
 }
 

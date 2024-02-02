@@ -3,7 +3,7 @@ const Coupon = require('../model/couponSchema')
 const bcrypt = require('bcrypt')
 
 
-const couponManagement = async (req,res) => {
+const couponManagement = async (req,res,next) => {
   try {
 
     const page = parseInt(req.query.page) || 1; // Default to page 1 if pageNo is not provided
@@ -24,14 +24,14 @@ const couponManagement = async (req,res) => {
 
    // const coupon = await Coupon.find()
     return res.render('ADMIN/couponManagement',{coupon,totalPages,page})
-  } catch (error) {
-    console.error(error)
-return res.status(500).json({error:'Internal server error'})
+  } catch (err) {
+    next(err); // Pass the error to the next middleware
+
   }
 }
 
 
-const addCoupon = async (req,res) =>{
+const addCoupon = async (req,res,next) =>{
   const error = req.session.value 
   delete req.session.value 
   return res.render('ADMIN/addCoupon',{error})
@@ -60,14 +60,14 @@ const insertCoupon = async (req, res) => {
     return res.redirect('/admin/add-coupon')
   }
     return res.redirect('/admin/coupon-management');
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal server error' });
+  } catch (err) {
+    next(err); // Pass the error to the next middleware
+
   }
 };
 
 
-const couponStatus = async (req,res) => {
+const couponStatus = async (req,res,next) => {
   try {
     const {couponId} = req.body
    const coupon = await Coupon.findById(couponId)
@@ -78,27 +78,27 @@ const couponStatus = async (req,res) => {
    }
    await coupon.save()
    return res.status(200).json({success:true})
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal server error' });
+  } catch (err) {
+    next(err); // Pass the error to the next middleware
+
   }
 }
 
 
-const editCouponPage = async (req,res) =>{
+const editCouponPage = async (req,res,next) =>{
   try {
    const couponId = req.params.id
    const coupon = await Coupon.findById(couponId)
    return res.render('ADMIN/editCoupon',{coupon})
-  } catch (error) {
-   console.error(error);
-     return res.status(500).json({ error: 'Internal server error' });
+  } catch (err) {
+    next(err); // Pass the error to the next middleware
+
   }
    
  }
 
 
- const editCoupon = async (req,res) =>{
+ const editCoupon = async (req,res,next) =>{
   try {
     const {couponId,couponCode,discountType,redeemableAmount,discountAmtOrPercentage,minOrderAmount,expirationDate} = req.body;
     const coupon = await Coupon.findOne({_id:couponId})
@@ -114,9 +114,9 @@ const editCouponPage = async (req,res) =>{
     await coupon.save()
 
     return res.status(200).json({succes:true})
-  } catch (error) {
-    console.error(error)
-    return res.status(500).send('internal server error')
+  } catch (err) {
+    next(err); // Pass the error to the next middleware
+
   }
 }
 
