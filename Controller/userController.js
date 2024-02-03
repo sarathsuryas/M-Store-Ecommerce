@@ -17,13 +17,7 @@ const Wallet = require('../model/walletSchema');
 const { resetPasswordSubmit } = require('./userPasswordReset');
 //function to generate a random OTP
 
-const landingPage = async (req,res,next) =>{
-  try {
-    return res.render('USER/landingPage')
-  } catch (error) {
-    next(error)
-  }
-}
+
 
 
 const generateOTP = () => {
@@ -113,13 +107,13 @@ const signupsub = async (req, res,next) => {
 
 }
 
-const otpModal = async (req,res) =>{
+const otpModal = async (req,res,next) =>{
   return res.render('USER/otpModal')
 }
 
-const userhome = async (req, res) => {
+const userhome = async (req, res,next) => {
 try {
- 
+ let loggedIn = req.cookies.loggedIn
   const page = parseInt(req.query.page) || 1;
 const no_of_docs_each_page = 8;
 const totalProducts = await Product.countDocuments()
@@ -129,16 +123,15 @@ const skip = (page - 1) * no_of_docs_each_page
   const products = await Product.find({ isListed: true })
   .skip(skip).limit(no_of_docs_each_page).populate('category')
   //const categories = await Category.find({isListed:true})
-  return res.render('USER/userhome', { products ,page , totalPages})
+  return res.render('USER/userhome', { products ,page , totalPages, loggedIn})
 } catch (error) {
-  console.error(error)
-  return res.json({message:'internal server error'})
+  next(error)
 }
   
 }
 
 
-const userauth = async (req, res) => {
+const userauth = async (req, res,next) => {
   const { one, two, three, four } = req.body;
 
   // Check if req.session.data exists
@@ -175,16 +168,15 @@ const userauth = async (req, res) => {
       //set the token as cookie
       res.setHeader('Set-Cookie', cookie.serialize('jwtToken', token, { httpOnly: true, maxAge: 3600, path: '/' }))
 
-      return res.redirect('/userhomeget')
+      return res.redirect('/')
 
     }
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error: 'Internal server error' });
+    next(error)
   }
 };
 
-const loginsub = async (req, res) => {
+const loginsub = async (req, res, next) => {
 
 
   const { email, password: enteredPassword } = req.body;
@@ -193,11 +185,11 @@ const loginsub = async (req, res) => {
 
     if (!userData) {
       req.session.notFound = 'User data not found Please Sign up'
-      return res.redirect('/')
+      return res.redirect('/get-login')
     }
     if (userData.isBlocked) {
       req.session.blocked = 'This User is blocked by Admin'
-      return res.redirect('/')
+      return res.redirect('/get-login')
     }
     const { password, _id, username } = userData;
     // Use bcrypt.compare with async/await for cleaner code
@@ -210,25 +202,27 @@ const loginsub = async (req, res) => {
 
       }
       //generate JWT
-      const token = jwt.sign({ user }, secretKey, { expiresIn: '3h' });
+      const token = jwt.sign({ user }, secretKey, { expiresIn: '24 hours' });
+      
       //set the token as cookie
-      res.setHeader('Set-Cookie', cookie.serialize('jwtToken', token, { httpOnly: true, maxAge: 3600, path: '/' }))
-      return res.redirect('/userhomeget')
+      res.cookie('jwtToken', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
+        res.cookie("loggedIn", true, { maxAge: 24 * 60 * 60 * 1000 });
+
+      return res.redirect('/')
     }
 
     else {
       req.session.err = 'The password is incorrect'
-      return res.redirect('/')
+      return res.redirect('/get-login')
 
     }
 
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ succes: false, error: 'internal server error' })
+   next(error)
   }
 }
 
-const purchaseProduct = async (req, res) => {
+const purchaseProduct = async (req, res,next) => {
 
   const userId = req.user.user._id
   const productId = req.params.id;
@@ -238,14 +232,16 @@ const purchaseProduct = async (req, res) => {
     console.log(products);
     return res.render('USER/purchaseProduct', { products, userId })
   } catch (error) {
-    console.error(error)
+    next(error)
   }
 }
 
-const shop = async (req, res) => {
+const shop = async (req, res, next) => {
   try {
     let products, categories,totalPages,page;
-    
+    // for Identifying in top of the page. page logged or not
+  const loggedIn = req.user.user ? true : false;
+
     // variable for finding the action
      let action = req.query.action;
      // action set as categoryName always
@@ -273,7 +269,7 @@ const shop = async (req, res) => {
        .populate('category')
        categories = await Category.find();
        
-       return res.render('USER/shop', { products, categories , page , totalPages , action , categoryId, price ,categoryName})
+       return res.render('USER/shop', { products, categories , page , totalPages , action , categoryId, price ,categoryName,loggedIn})
        
       }else if(action==="All Products"&&price==="highToLow"){
         categoryName = action
@@ -289,7 +285,7 @@ const shop = async (req, res) => {
         .populate('category')
         categories = await Category.find();
         
-        return res.render('USER/shop', { products, categories , page , totalPages , action , categoryId, price, categoryName})
+        return res.render('USER/shop', { products, categories , page , totalPages , action , categoryId, price, categoryName,loggedIn})
         
       }else if(category && action===(category.categoryName ? category.categoryName : 'defaultCategoryName')&&price==="lowToHigh"){
         categoryName = action
@@ -305,7 +301,7 @@ const shop = async (req, res) => {
         .populate('category')
         categories = await Category.find();
         
-        return res.render('USER/shop', { products, categories , page , totalPages , action , categoryId, price ,categoryName  })
+        return res.render('USER/shop', { products, categories , page , totalPages , action , categoryId, price ,categoryName ,loggedIn })
 
       }else if(category && action===(category.categoryName ? category.categoryName : 'defaultCategoryName')&&price==="highToLow"){
           categoryName = action
@@ -321,7 +317,7 @@ const shop = async (req, res) => {
         .populate('category')
         categories = await Category.find();
         
-        return res.render('USER/shop', { products, categories , page , totalPages , action , categoryId, price ,categoryName  })
+        return res.render('USER/shop', { products, categories , page , totalPages , action , categoryId, price ,categoryName ,loggedIn })
       }
       else if(category && action===(category.categoryName ? category.categoryName : 'defaultCategoryName')){
        categoryName = action
@@ -338,7 +334,7 @@ const shop = async (req, res) => {
         
         categories = await Category.find();
         
-        return res.render('USER/shop', { products, categories , page , totalPages , action , categoryId ,price, categoryName })
+        return res.render('USER/shop', { products, categories , page , totalPages , action , categoryId ,price, categoryName, loggedIn })
       }
       else{
         categoryName = action
@@ -352,31 +348,23 @@ const shop = async (req, res) => {
      .limit(no_of_docs_each_page)
      .populate('category')
      categories = await Category.find();
-     return res.render('USER/shop', { products, categories , page , totalPages , action,categoryId:'',price:'' , categoryName})
+     return res.render('USER/shop', { products, categories , page , totalPages , action,categoryId:'',price:'' , categoryName,loggedIn})
      
    }
 
     
   } catch (error) {
-    console.error('Error fetching data:', error);
-    // Handle the error appropriately
-    return res.status(500).send('Internal Server Error');
+    next(error)
   }
 };
 
 
-
-
-
-
-
-
-
-
-const userProfile = async (req, res) => {
+const userProfile = async (req, res,next) => {
   const userId = req.user.user._id;
   try {
-     
+    // for Identifying in top of the page. page logged or not
+    const loggedIn = req.user.user ? true : false;
+
     const user = await User.findById(userId)
     const wallet = await Wallet.findOne({userId:userId})
     const orders = await Order.find({userId:userId}).sort({createdAt:-1})
@@ -387,18 +375,15 @@ const userProfile = async (req, res) => {
     const phoneNumber = user.mobile
     const mobile = (!phoneNumber) ? '' : phoneNumber
  
-    return res.render('USER/userProfile', { mobile, user, orders , adrs ,wallet })
+    return res.render('USER/userProfile', { mobile, user, orders , adrs ,wallet ,loggedIn})
   } catch (error) {
-    console.error(error)
-    return res.status(500).json({ err: "internal server error" })
+    next(error)
   }
 }
 
 
 
-
-
-const editUserDetails = async (req,res) =>{
+const editUserDetails = async (req,res,next) =>{
   try{
     const {username,email,phone}=req.body
     const userId = req.user.user._id;
@@ -411,27 +396,19 @@ const editUserDetails = async (req,res) =>{
     await user.save()
     return res.status(200).json({success:true})
   }catch(error){
-    console.error(error)
-    return res.status(500).json({error:"internal server error"})
+    next(error)
   }
 }
 
 
-
-
 const logout = async (req, res) => {
-  res.clearCookie('jwtToken', { path: '/' }); // replace 'jwtToken' with the name of your cookie
-  return res.redirect('/');
+  res.clearCookie('jwtToken'); 
+  res.clearCookie("loggedIn");
+  res.redirect("/get-login");
 }
 
 
-
-
-
-
-
-
-const searchProduct = async (req,res) =>{
+const searchProduct = async (req,res,next) =>{
   try {
     const {input} = req.body
     
@@ -443,23 +420,21 @@ const searchProduct = async (req,res) =>{
       return res.status(500).json({message:"Product not found"})
     }
   } catch (error) {
-    console.log(error.message);
-    res.json({ status: 'error' });
+    next(error)
   }
 }
 
-const searchInput = async (req,res) => {
+const searchInput = async (req,res,next) => {
   try {
     const product = await Product.findOne({title:req.body.searchName})
     const productId = product._id
    return res.status(200).json({success:true,productId})
   } catch (error) {
-     console.log(error.message);
-    res.json({ status: 'error' });
+     next(error)
   }
 }
 
-const searchResult = async (req,res) =>{
+const searchResult = async (req,res,next) =>{
    try {
     const productId = req.query.id
     const product= await Product.findOne({_id:productId}).populate('category')
@@ -468,12 +443,11 @@ const searchResult = async (req,res) =>{
     const products = array
     return res.render('USER/userhome', { products ,page:'' , totalPages:''})
    } catch (error) {
-    console.log(error.message);
-    res.json({ status: 'error' });
+    next(error)
    }
 }
 
-const applyCoupon = async (req,res) =>{
+const applyCoupon = async (req,res,next) =>{
   try {
     
     const userId = req.user.user._id;
@@ -503,10 +477,9 @@ const applyCoupon = async (req,res) =>{
     return res.status(203).json({succes:true,discountAmtOrPercentage})
     
   } catch (error) {
-    console.error(error)
-    return res.json(error, 'internal server error')
+   next(error)
   }
 }
 
 
-module.exports = { userlogin, signupsub, userhome, userauth, loginsub, purchaseProduct, shop, userSignup,  userProfile, editUserDetails,logout,searchProduct,otpModal,applyCoupon,searchInput,searchResult,landingPage}
+module.exports = { userlogin, signupsub, userhome, userauth, loginsub, purchaseProduct, shop, userSignup,  userProfile, editUserDetails,logout,searchProduct,otpModal,applyCoupon,searchInput,searchResult}

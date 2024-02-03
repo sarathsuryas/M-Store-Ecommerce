@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const { PassThrough } = require('nodemailer/lib/xoauth2');
 var randtoken = require('rand-token');
 
-const forgotPassword = async (req,res) =>{
+const forgotPassword = async (req,res,next) =>{
   try{
     const {email} = req.body
     
@@ -53,19 +53,18 @@ let mailOptions = {
    req.session.email = email
   return res.status(200).json({success:true})
   }catch (error) {
-  console.log(error.message);
-  res.json({ status: 'error' });
+  next(error)
 }
 }
 
-const resetPassword = async (req,res) =>{
+const resetPassword = async (req,res,next) =>{
   try {
     let newDate = Date.now()
     const email = req.session.email
     const token = req.query.token;
     const user = await User.findOne({email:email})
 
-   console.log(user)
+   
 
    if(user.token===token&& newDate <= user.tokenExpire){
     return res.render('USER/resetPassword')
@@ -74,13 +73,12 @@ const resetPassword = async (req,res) =>{
    }
     
   } catch (error) {
-    console.log(error.message);
-    res.json({ status: 'error' });
+    next(error)
   }
 }
 
 
-const resetPasswordSubmit = async (req,res) =>{
+const resetPasswordSubmit = async (req,res,next) =>{
   try{
 
  const {confirmPassword} = req.body
@@ -99,12 +97,11 @@ const resetPasswordSubmit = async (req,res) =>{
    })
  
   }catch (error) {
- console.log(error.message);
- res.json({ status: 'error' });
+ next(error)
 }
 }
 
-const changePassword = async (req, res) => {
+const changePassword = async (req, res, next) => {
   try {
     const userId = req.user.user._id
     const { oldPassword, newPassword } = req.body
@@ -127,8 +124,7 @@ const changePassword = async (req, res) => {
     }
     console.log(req.body)
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal server error' })
+    next(error)
   }
 }
 

@@ -225,7 +225,7 @@
                                     </a>
                                 </div>
                                 <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="/cart/gotocart">
+                                    <a class="mini-cart-icon" href="/gotocart">
                                         <img alt="Evara" src="/userassets/imgs/theme/icons/icon-cart.svg">
                                         <!-- <span class="pro-count blue">2</span> -->
                                     </a>
@@ -467,7 +467,7 @@
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
                             <nav>
                                 <ul>
-                                    <li><a class="active" href="/userhomeget">Home <i></i></a>
+                                    <li><a class="active" href="/">Home <i></i></a>
                                         <!-- <ul class="sub-menu">
                                             <li><a href="index.html">Home 1</a></li>
                                             <li><a href="index-2.html">Home 2</a></li>
@@ -1720,7 +1720,7 @@
                 // Add a loading state to the button
                 button.classList.add('loading');
         
-                const response = await fetch('/cart/addtocart', {
+                const response = await fetch('/addtocart', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

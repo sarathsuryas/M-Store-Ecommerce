@@ -159,19 +159,27 @@
                       </div>
                   </div>
                   <div class="col-xl-3 col-lg-4">
-                      <div class="header-info header-info-right">
-                          <ul>
+                    <div class="header-info header-info-right">
+                        <ul>
+                          <% if (loggedIn) { %>
+                            <!-- User is logged in -->
+                            <li>
+                              <a href="/user-profile">Account</a>
+                            </li>
+                            <li>
+                              <a href="/logout">Logout</a>
+                            </li>
+                            <% } else { %>
+                              <!-- User is not logged in -->
                               <li>
-                                  <a class="language-dropdown-active" href="#"> <i class="fi-rs-world"></i> English <i class="fi-rs-angle-small-down"></i></a>
-                                  <ul class="language-dropdown">
-                                      <li><a href="#"><img src="/userassets/imgs/theme/flag-fr.png" alt="">Français</a></li>
-                                      <li><a href="#"><img src="/userassets/imgs/theme/flag-dt.png" alt="">Deutsch</a></li>
-                                      <li><a href="#"><img src="/userassets/imgs/theme/flag-ru.png" alt="">Pусский</a></li>
-                                  </ul>
+                                <a href="/get-login">Log In</a>
                               </li>
-                              <li><i class="fi-rs-user"></i><a href="/user-profile">Profile</a></li>
-                          </ul>
-                      </div>
+                              <li>
+                                <a href="/signup">Sign Up</a>
+                              </li>
+                              <% } %>
+                        </ul>
+                      </div>
                   </div>
               </div>
           </div>
@@ -417,7 +425,7 @@
                       <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
                           <nav>
                               <ul>
-                                  <li><a class="active" href="/userhomeget">Home <i></i></a>
+                                  <li><a class="active" href="/">Home <i></i></a>
                                       <!-- <ul class="sub-menu">
                                           <li><a href="index.html">Home 1</a></li>
                                           <li><a href="index-2.html">Home 2</a></li>
@@ -651,7 +659,7 @@
                   <!-- mobile menu start -->
                   <nav>
                       <ul class="mobile-menu">
-                          <li class="menu-item-has-children"><span class="menu-expand"></span><a href="/userhomeget">Home</a>
+                          <li class="menu-item-has-children"><span class="menu-expand"></span><a href="/">Home</a>
                               <ul class="dropdown">
                                   <li><a href="index.html">Home 1</a></li>
                                   <li><a href="index-2.html">Home 2</a></li>

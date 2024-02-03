@@ -10,11 +10,13 @@ const cart = (req,res) =>{
 
 const addToCart = async  (req,res,next) =>{
 
-const {productId,quantity} = req.body
 
-const userId = req.user.user._id;
 
 try{
+  const {productId,quantity} = req.body
+
+  const userId = req.user.user._id;
+
   const product = await Product.findById(productId)
  
   if(product.stock!==0){
@@ -154,13 +156,17 @@ const calculateProductTotal = async (productId,quantity) =>{
 }
 
 const goToCart = async (req,res,next) => {
-  const userId = req.user.user._id;
+  
   try {
+    const userId = req.user.user._id;
+   // for Identifying in top of the page. page logged or not
+  const loggedIn = req.user.user ? true : false;
+
     const cartOfTheUser = await Cart.findOne({userId:userId}).populate('products.productId')
     const coupon = await Coupon.find()
     const date = new Date()
     
-    return res.render('USER/cart', {cart:cartOfTheUser,coupon,date});
+    return res.render('USER/cart', {cart:cartOfTheUser,coupon,date,loggedIn});
   } catch(err) {
     next(err); // Pass the error to the next middleware
   }

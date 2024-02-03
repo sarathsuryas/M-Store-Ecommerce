@@ -10,7 +10,7 @@ const Coupon = require('../model/couponSchema');
 const Wallet = require('../model/walletSchema')
 
 
-const placeOrderCod = async (req, res) => {
+const placeOrderCod = async (req, res,next) => {
   try {
     const { payment, addressId, discountPrice:discountPriceWithoOrWithout , couponCode ,totalShipment } = req.body
     const userId = req.user.user._id;
@@ -109,7 +109,7 @@ products.forEach(async (product, index) => {
   }
 }
 
-const placeOrderOnlinePayment = async (req,res) =>{
+const placeOrderOnlinePayment = async (req,res,next) =>{
   try {
     const { payment, addressId, discountPrice:discountPriceWithoOrWithout, totalShipment } = req.body
    
@@ -217,7 +217,7 @@ const placeOrderOnlinePayment = async (req,res) =>{
   }
 }
 
-const paymentStatus = async (req,res) =>{
+const paymentStatus = async (req,res,next) =>{
   try {
     const userId = req.user.user._id
     const cart = await Cart.findOne({ userId: userId }).populate('products.productId')
@@ -259,7 +259,7 @@ products.forEach(async (product, index) => {
   }
   }
 
-  const placeOrderWallet = async (req,res) =>{
+  const placeOrderWallet = async (req,res,next) =>{
     try {
      const { payment, addressId, discountPrice:discountPriceWithoOrWithout , couponCode , totalShipment } = req.body
      const userId = req.user.user._id;
@@ -372,12 +372,12 @@ products.forEach(async (product, index) => {
     }
  }
 
- const orderConfirmed = async (req, res) => {
+ const orderConfirmed = async (req, res,next) => {
   return res.render('USER/orderConfirmed')
 }
 
 
-const orderDetailedView = async(req,res) =>{
+const orderDetailedView = async(req,res,next) =>{
   try{
    const orderId = req.params.id
    const order = await Order.findById(orderId).populate('products.productId')
@@ -391,7 +391,7 @@ const orderDetailedView = async(req,res) =>{
   }
  }
 
- const individualOrder = async (req,res) =>{
+ const individualOrder = async (req,res,next) =>{
   const {individualOrderId,orderId,reason} = req.body
   const userId = req.user.user._id
   try{

@@ -263,7 +263,7 @@ animation: spin 1s linear infinite;
                 <% if (i === page) { %>
                     <li class="page-item active"><span class="page-link"><%= i %></span></li>
                 <% } else { %>
-                    <li class="page-item"><a class="page-link" href="/userhomeget?page=<%= i %>"><%= i %></a></li>
+                    <li class="page-item"><a class="page-link" href="/?page=<%= i %>"><%= i %></a></li>
                 <% } %>
             <% } %>
             <li class="page-item"><a class="page-link dot" href="#">...</a></li>

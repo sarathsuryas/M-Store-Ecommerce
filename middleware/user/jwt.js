@@ -1,31 +1,21 @@
-const jwt = require('jsonwebtoken');
-const secretKey = process.env.ACCESS_TOKEN_SECRET
 
-function authenticate(req,res,next){
-  const cookieHeader = req.headers.cookie;
-  
-  if(!cookieHeader){
-    return res.status(401).json({message:'Authorization token not provided'})
-  }
-   //parse the cookie header to get the cookie
-const cookies = cookieHeader.split('; ').reduce((acc,cookie) =>{
-  const [name,value] = cookie.split('=');
-  acc[name] = value;
-  return acc;
-},{})
 
-const token = cookies.jwtToken
-if(!token){
-  return res.redirect('/')
-}
-  jwt.verify(token,secretKey,(err,user) =>{
-    if(err){
-      return res.status(403).json({message:'Invalid token'})
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
+function authenticate  (req, res, next) {
+
+  const token = req.cookies.jwtToken;
+  console.log(token,'//////////////////////////////////////////////////////')
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      console.log("error");
+
+      return res.redirect("/get-login");
     }
-    req.user = user;
-  
+    req.user = decoded;
     next();
-  })
-}
+  });
+};
 
-module.exports = authenticate;
+module.exports = authenticate

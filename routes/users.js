@@ -11,10 +11,9 @@ const  checkLoggedIn = require("../middleware/user/forLoggedIn")
 
 /* GET users listing. */
 // user authentications
-router.get('/',checkLoggedIn,usercontroller.landingPage)
+router.get('/',usercontroller.userhome)
 router.get('/get-login',checkLoggedIn,usercontroller.userlogin)
-router.post('/loginsub',usercontroller.loginsub)
-router.get('/userhomeget',authenticate,usercontroller.userhome)
+router.post('/loginsub',usercontroller.loginsub) 
 router.get('/logout',usercontroller.logout)
 
 router.get('/signup',checkLoggedIn,usercontroller.userSignup)
@@ -23,7 +22,7 @@ router.get('/otp-modal',checkLoggedIn,usercontroller.otpModal)
 router.post('/userauth',usercontroller.userauth)
 
 router.get('/purchaseproduct/:id',authenticate,usercontroller.purchaseProduct)
-router.get('/shop',usercontroller.shop)
+router.get('/shop',authenticate,usercontroller.shop)
 
 // cart 
 router.get('/cart',cartcontroller.cart)
