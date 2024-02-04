@@ -72,17 +72,34 @@
                 </tr>
             </thead>
             <tbody id="sales-data">
-              <% monthlySales.forEach(item=> { %>  
-                  <% item.products.forEach(product =>  { %>
+                <% 
+                    let grandTotalQuantity = 0;
+                    let grandTotalPrice = 0;
+            
+                    monthlySales.forEach(item => { %>  
+                        <% item.products.forEach(product => { %>
+                            <tr>
+                                <td><%= item.date.toLocaleString() %></td>
+                                <td><%= item.orderId %></td>  
+                                <td><%= product.productId.title %></td>
+                                <td><%= product.total %> </td>
+                                <td><%= product.quantity %></td>
+                            </tr>
+            
+                            <% 
+                                // Accumulate grand total values
+                                grandTotalQuantity += product.quantity;
+                                grandTotalPrice += product.total;
+                            %>
+                        <% }) %>
+                    <% }) %> 
+            
+                    <!-- Grand Total Row -->
                     <tr>
-                    <td><%= item.date.toLocaleString() %></td>
-                    <td><%= item.orderId %></td>  
-                     <td><%= product.productId.title %></td>
-                     <td><%= product.total %> </td>
-                     <td><%= product.quantity %></td>
-                     </tr>
-                       <% }) %>
-               <% }) %> 
+                        <td colspan="3">Grand Total</td>
+                        <td><%= grandTotalPrice.toFixed(2) %></td>
+                        <td><%= grandTotalQuantity %></td>
+                    </tr>
             </tbody>
         </table>
     </div>
@@ -99,6 +116,7 @@
     <script>
         const printInExcel = document.getElementById('printInExcel');
         const salesData = JSON.parse('<%- jsonString %>')
+       
         
         printInExcel.addEventListener("click", function () {
             // Create a new workbook

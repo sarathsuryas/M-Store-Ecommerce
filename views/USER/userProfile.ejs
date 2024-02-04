@@ -153,6 +153,7 @@ crossorigin="anonymous"></script>
                                                         <tr>
                                                             <th>sl no</th>
                                                             <th>Date</th>
+                                                            <th>Order Id</th>
                                                             <th>Amount</th>
                                                             <th>Payment Status</th>
                                                         </tr>
@@ -166,6 +167,7 @@ crossorigin="anonymous"></script>
                                                                         <tr>
                                                                             <td><%= n %></td>
                                                                             <td><%= item.date.toLocaleString() %></td>
+                                                                            <td><%= item.orderId %></td>
                                                                             <td><%= product.total%></td>
                                                                             <% if(product.cancelStatus===true){%>
                                                                                 <td>Refunded</td>
