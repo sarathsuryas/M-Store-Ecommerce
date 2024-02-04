@@ -198,7 +198,7 @@
                         <a href="/userhomeget"><img src="/userassets/logo/logo.png" alt="logo"></a>
                     </div>
                     <div class="header-right">
-                        <div class="search-style-2">
+                        <div class="search-style-2" style="visibility: hidden;">
                             <form action="#">
                                 <select class="select-active">
                                     <option>All Categories</option>
@@ -944,16 +944,19 @@
                                         </div>
                                         <div class="bt-1 border-color-1 mt-30 mb-30"></div>
                                         <div class="detail-extralink">
-                                            <!-- <div class="detail-qty border radius">
-                                                <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                                <span class="qty-val">1</span>
-                                                <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
-                                            </div> -->
+                                            
+                                            <% if(loggedIn) { %>
                                             <div class="product-extra-link2">
+                                               
                                                 <button type="button" class="button button-add-to-cart" onclick="addToCart('<%= products.id %>')" id="addToCartBtn">Add to cart</button>
                                                 <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
-                                                <!-- <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> -->
+                                                
+                                                
                                             </div>
+                                            <% } else { %>
+                                                <a class="btn btn-default" href="/get-login">Buy Now</a>
+
+                                                 <% } %>
                                             
                                         </div>
                                         <!-- <ul class="product-meta font-xs color-grey mt-50">
@@ -1657,8 +1660,8 @@
      
 
     <!-- notification -->
-    <div id="notification" style="display: none;">
-        Product added to cart!
+    <div id="notification" class="notificationDiv" style="display: none;">
+    
     </div>
     
     <style>
@@ -1711,34 +1714,40 @@
 
     <!-- add to cart -->
     
-   
     <script>
+    
         async function addToCart(productId) {
+            
             const button = document.getElementById('addToCartBtn');
-        
+            
             try {
                 // Add a loading state to the button
                 button.classList.add('loading');
-        
+    
                 const response = await fetch('/addtocart', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ productId, quantity: 1 }),
-                    credentials: 'include',
+                    body: JSON.stringify({ productId, quantity: 1 })
                 });
-        
+                if(response.status===202){
+                    
+                  return  showOutOfStock();
+                }
+    
                 if (!response.ok) {
                     console.error('Error adding product to cart:', response.status);
                     return;
                 }
         
-                const result = await response.json();
-                console.log('Product added to cart:', result);
-        
-                // Show the notification
+                
+                
+             if(response.status===200){
                 showNotification();
+             }
+                // Show the notification
+                
             } catch (error) {
                 console.error('Error:', error);
             } finally {
@@ -1748,13 +1757,51 @@
         }
         
         function showNotification() {
-            const notificationDiv = document.getElementById('notification');
-        
+           
+            const notificationDiv = document.getElementById('notification')
             // Check if the notificationDiv exists
             if (notificationDiv) {
                 // Show the notification
                 notificationDiv.style.display = 'block';
-        
+                document.getElementById('notification').innerText="Product added to cart!"
+                // Hide the notification after a few seconds (adjust the timeout as needed)
+                setTimeout(() => {
+                    notificationDiv.style.display = 'none';
+                }, 3000); // Hide after 3 seconds
+            } else {
+                console.error('Notification div not found');
+            }
+        }
+    
+    
+        function showOutOfStock() {
+           
+            
+           const notificationDiv = document.getElementById('notification')
+           // Check if the notificationDiv exists
+           if (notificationDiv) {
+               // Show the notification
+               notificationDiv.style.display = 'block';
+               document.getElementById('notification').innerText="Out Of Stock!"
+               // Hide the notification after a few seconds (adjust the timeout as needed)
+               setTimeout(() => {
+                   notificationDiv.style.display = 'none';
+               }, 3000); // Hide after 3 seconds
+           } else {
+               console.error('Notification div not found');
+           }
+       }
+    
+    
+        function showOutOfStock() {
+           
+            
+            const notificationDiv = document.getElementById('notification')
+            // Check if the notificationDiv exists
+            if (notificationDiv) {
+                // Show the notification
+                notificationDiv.style.display = 'block';
+                document.getElementsByClassName('notificationDiv')[0].innerHTML="Out of Stock"
                 // Hide the notification after a few seconds (adjust the timeout as needed)
                 setTimeout(() => {
                     notificationDiv.style.display = 'none';
@@ -1764,7 +1811,7 @@
             }
         }
         </script>
-
+   
 
 </body>
 

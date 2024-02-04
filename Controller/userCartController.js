@@ -10,9 +10,8 @@ const cart = (req,res) =>{
 
 const addToCart = async  (req,res,next) =>{
 
-
-
 try{
+  
   const {productId,quantity} = req.body
 
   const userId = req.user.user._id;
@@ -119,6 +118,7 @@ return res.status(200).json({success:true,cart})
  
 }
   }else if (product.stock <= 0){
+    
        return res.status(202).json({success:true})
   }
 }catch(err){

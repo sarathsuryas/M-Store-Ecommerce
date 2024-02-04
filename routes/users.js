@@ -21,7 +21,7 @@ router.post('/signupsub',usercontroller.signupsub)
 router.get('/otp-modal',checkLoggedIn,usercontroller.otpModal)
 router.post('/userauth',usercontroller.userauth)
 
-router.get('/purchaseproduct/:id',authenticate,usercontroller.purchaseProduct)
+router.get('/purchaseproduct/:id',usercontroller.purchaseProduct)
 router.get('/shop',authenticate,usercontroller.shop)
 
 // cart 
@@ -56,9 +56,9 @@ router.post('/reset',passwordcontroller.resetPasswordSubmit)
 router.put('/change-password',authenticate,passwordcontroller.changePassword)
 router.get('/after-reset',authenticate,passwordcontroller.afterReset)
 
-router.post('/search-product',authenticate,usercontroller.searchProduct)
-router.post('/search-input',authenticate,usercontroller.searchInput)
-router.get('/search-result',authenticate,usercontroller.searchResult)
+router.post('/search-product',usercontroller.searchProduct)
+router.post('/search-input',usercontroller.searchInput)
+router.get('/search-result',usercontroller.searchResult)
 // coupon
 router.post('/apply-coupon',authenticate,usercontroller.applyCoupon)
 

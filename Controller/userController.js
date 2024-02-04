@@ -178,9 +178,9 @@ const userauth = async (req, res,next) => {
 
 const loginsub = async (req, res, next) => {
 
-
-  const { email, password: enteredPassword } = req.body;
   try {
+    const { email, password: enteredPassword } = req.body;
+
     const userData = await User.findOne({ email: email })
 
     if (!userData) {
@@ -223,14 +223,13 @@ const loginsub = async (req, res, next) => {
 }
 
 const purchaseProduct = async (req, res,next) => {
-
-  const userId = req.user.user._id
-  const productId = req.params.id;
   // console.log(productId);
   try {
+    const productId = req.params.id;
+    let loggedIn = req.cookies.loggedIn
     const products = await Product.findOne({ _id: productId }).populate('category')
     console.log(products);
-    return res.render('USER/purchaseProduct', { products, userId })
+    return res.render('USER/purchaseProduct', { products ,loggedIn})
   } catch (error) {
     next(error)
   }
@@ -436,12 +435,13 @@ const searchInput = async (req,res,next) => {
 
 const searchResult = async (req,res,next) =>{
    try {
+    let loggedIn = req.cookies.loggedIn
     const productId = req.query.id
     const product= await Product.findOne({_id:productId}).populate('category')
     const array = []
     array.push(product)
     const products = array
-    return res.render('USER/userhome', { products ,page:'' , totalPages:''})
+    return res.render('USER/userhome', { products ,page:'' , totalPages:'',loggedIn})
    } catch (error) {
     next(error)
    }
