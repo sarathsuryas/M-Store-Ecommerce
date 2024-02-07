@@ -43,7 +43,9 @@ const bcrypt = require('bcrypt')
 
 const adminlogin = async (req,res,next) => {
   var message = req.session.message;
+  delete req.session.message;
   const email = req.session.email;
+  delete req.session.email
   return  res.render('ADMIN/adminlogin',{message,email})
   
 }
