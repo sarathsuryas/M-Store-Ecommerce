@@ -144,7 +144,9 @@ crossorigin="anonymous"></script>
                                             </div>
                                             <div class="card-body text-center">
                                                 <span class="d-block"><h3>Balance</h3></span>
+                                                <% if(wallet) { %>
                                                 <span class="d-block">₹ <%= wallet.amount %></span>
+                                                <% } %>
                                                 <table class="table table-bordered mt-3" id="wallet-table">
                                                     <thead>
                                                         

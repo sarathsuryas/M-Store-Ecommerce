@@ -38,7 +38,7 @@ let mailOptions = {
   subject:"Reset Your password using this link",
   html:`<p>Hello ${user.username},</p>
   <p>You requsted a password reset for your account.Click the link below to reset your password:</p>
-  <a href="http://localhost:3000/reset-password?token=${token}">Reset Password</a>
+  <a href="http://m-store.site/reset-password?token=${token}">Reset Password</a>
   <p>If you didn't request this ,please ignore this email.</p>
   `
 };

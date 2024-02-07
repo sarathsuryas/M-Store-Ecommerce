@@ -281,10 +281,11 @@
                                     <tbody>
 
 
-
+                                          <% if(cart&&cart.cartTotal!=null) { %>
                                         <% if(coupon) { %>
                                             <% coupon.forEach( item=> { %>
-                                                <% if (cart.cartTotal>= item.minOrderAmount && date <=
+
+                                                <% if (cart.cartTotal  >= item.minOrderAmount && date <=
                                                         item.expirationDate && item.isActive==="Active" ) { %>
                                                         <tr>
                                                             <td>
@@ -308,6 +309,7 @@
 
                                                         <% } %>
                                                             <% }) %>
+                                                                <% } %>
                                                                 <% } %>
                                     </tbody>
                                 </table>

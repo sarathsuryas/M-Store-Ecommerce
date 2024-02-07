@@ -164,9 +164,10 @@ const userauth = async (req, res,next) => {
         username: userData.username
       }
       //generate JWT
-      const token = jwt.sign({ user }, secretKey, { expiresIn: '1h' });
+      const token = jwt.sign({ user }, secretKey, { expiresIn: '24 hours' });
       //set the token as cookie
-      res.setHeader('Set-Cookie', cookie.serialize('jwtToken', token, { httpOnly: true, maxAge: 3600, path: '/' }))
+      res.cookie('jwtToken', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
+        res.cookie("loggedIn", true, { maxAge: 24 * 60 * 60 * 1000 });
 
       return res.redirect('/')
 

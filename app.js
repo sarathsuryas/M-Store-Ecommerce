@@ -82,5 +82,5 @@ app.use(function(err, req, res, next) {
 const port =3000
 
 app.listen(port,()=>{
-  console.log("localhost connected sucessfukky");
+  console.log("localhost connected sucessfully");
 })
