@@ -61,11 +61,10 @@ const resetPassword = async (req,res,next) =>{
   try {
     let newDate = Date.now()
     const email = req.session.email
+    console.log(email,'///////////////////////////////')
     const token = req.query.token;
     
     const user = await User.findOne({email:email})
-
-   console.log(user,'/////////////////////////////////////')
 
    if(user.token===token&& newDate <= user.tokenExpire){
     return res.render('USER/resetPassword')
