@@ -131,10 +131,10 @@ const changePassword = async (req, res, next) => {
 
 const afterReset = async(req,res) =>{
   if(req.user.user._id){
-    return res.redirect('/userhomeget')
+    return res.redirect('/')
   }
   else{
-    return res.redirect('/')
+    return res.redirect('/get-login')
   }
 }
 
