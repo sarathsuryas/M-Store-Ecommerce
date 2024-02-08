@@ -33,7 +33,7 @@ const addAddress = async (req, res,next) => {
       }
     }
     await userAddress.save();
-    return res.redirect('/cart/checkout')
+    return res.redirect('/checkout')
 
   } catch (err) {
     next(err); // Pass the error to the next middleware

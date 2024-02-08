@@ -102,7 +102,9 @@ products.forEach(async (product, index) => {
     await product.save();
 });
 
-  
+   cart.products = []
+
+  await cart.save()
     return res.status(200).json({ succes: true })
   } catch (err) {
     next(err); // Pass the error to the next middleware
@@ -207,8 +209,8 @@ const placeOrderOnlinePayment = async (req,res,next) =>{
   //     product.stock = product.stock - cartQuantity[index];
   //     await product.save();
   // });
-  
-
+     
+        
       return res.status(200).json({ succes: true , razorOrder,key_id,secret_key})
     });
     
@@ -248,11 +250,13 @@ products.forEach(async (product, index) => {
     product.stock = product.stock - cartQuantity[index];
     await product.save();
 });
+cart.products = []
 
+await cart.save()
     return res.redirect('/order-confirmed')
    
   }
-   return res.redirect('/cart/checkout')
+   return res.redirect('/checkout')
    
   } catch (err) {
     next(err); // Pass the error to the next middleware
@@ -284,8 +288,8 @@ products.forEach(async (product, index) => {
  }
  
      const wallet = await Wallet.findOne({userId:userId})
-      if(wallet.amount===0){
-       return res.status(201).json({success:true})
+      if(!wallet||wallet.amount===0){
+       return res.status(206).json({success:true})
       }
       // fix bug here
       console.log(discountPriceWithoOrWithout)
@@ -361,7 +365,9 @@ products.forEach(async (product, index) => {
      await product.save();
  });
  
- 
+ cart.products = []
+
+ await cart.save()
    
      return res.status(200).json({ succes: true })
    }else{

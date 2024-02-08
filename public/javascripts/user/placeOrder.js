@@ -93,7 +93,7 @@ if (payment === "online-payment") {
     cancelButtonColor: "#d33",
     confirmButtonText: "Yes, Confirm!"
   }).then(async (result) => {
-    alert(discountPrice)
+    
     if (result.isConfirmed) {
       const response = await fetch('/place-order-online-payment', {
         method: "POST",
@@ -196,7 +196,7 @@ if(payment==='wallet'){
          },
          body:JSON.stringify({payment,addressId,discountPrice,couponCode,totalShipment})
     })
-     if(response.status===201){
+     if(response.status===206){
       Swal.fire({
         icon: "error",
         title: "Oops...",
