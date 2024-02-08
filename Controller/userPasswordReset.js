@@ -50,7 +50,7 @@ let mailOptions = {
       console.log("Email sent: " + info.response)
     }
    })
-   req.session.emailForReset = email
+   req.session.email = email
   return res.status(200).json({success:true})
   }catch (error) {
   next(error)
@@ -60,7 +60,7 @@ let mailOptions = {
 const resetPassword = async (req,res,next) =>{
   try {
     let newDate = Date.now()
-    const email = req.session.emailForReset
+    const email = req.session.email
     console.log(email,'///////////////////////////////')
     const token = req.query.token;
     
