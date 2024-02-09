@@ -99,9 +99,11 @@
                                             </div>
                                             <div class="product-action-1 show">
                                                
-                                                
-
+                                                   <% if(loggedIn) {%>
                                                   <button type="button" aria-label="Add To Cart" class="action-btn hover-up" onclick="addToCart('<%= product.id %>')" id="addToCartBtn"><i class="fi-rs-shopping-bag-add"></i></button> 
+                                                  <% } else { %>
+                                                    <a href="/get-login" type="button" aria-label="Add To Cart" class="action-btn hover-up"  id="addToCartBtn"><i class="fi-rs-shopping-bag-add"></i></a> 
+                                                    <% } %>
                                             </div>
                                         </div>
                                     </div>
@@ -303,6 +305,7 @@ animation: spin 1s linear infinite;
             console.error('Notification div not found');
         }
     }
+    
     </script>
 
 

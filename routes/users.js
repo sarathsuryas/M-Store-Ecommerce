@@ -25,7 +25,7 @@ router.get('/purchaseproduct/:id',usercontroller.purchaseProduct)
 router.get('/shop',authenticate,usercontroller.shop)
 
 // cart 
-router.get('/cart',cartcontroller.cart)
+
 router.post('/addtocart',authenticate,cartcontroller.addToCart)
 router.get('/gotocart',authenticate,cartcontroller.goToCart)
 router.put('/updatequantity',authenticate,cartcontroller.updateQuantity)

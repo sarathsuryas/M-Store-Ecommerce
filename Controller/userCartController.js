@@ -3,10 +3,7 @@ const Cart = require('../model/cartSchema')
 const Product = require('../model/productSchema')
 const Address = require('../model/addressSchema')
 const Coupon = require('../model/couponSchema')
-const cart = (req,res) =>{
 
-  return res.render('USER/cart')
-}
 
 const addToCart = async  (req,res,next) =>{
 
@@ -281,4 +278,4 @@ return res.render('USER/checkout2',{cart,address,couponCode})
 }
 
 
-module.exports = {cart,addToCart,goToCart,updateQuantity,deleteCart,checkout}
+module.exports = {addToCart,goToCart,updateQuantity,deleteCart,checkout}
