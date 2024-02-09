@@ -25,7 +25,7 @@ async function placeOrder(couponCode,totalShipment){
     })
     return;
   }
-
+  
 
 try{
   if(payment==="cod"){
@@ -162,6 +162,7 @@ if (payment === "online-payment") {
               text: "Payment failed!",
               footer: '<a href="#">Why do I have this issue?</a>',
             });
+            localStorage.removeItem("discount");
             window.location.href = `/paymentStatus?orderId=${orderId}&status=Failed`;
           });
         
@@ -231,7 +232,7 @@ if(payment==='wallet'){
      text: "Your Order Placed Successfully.",
     icon: "success"
     }).then((data)=>{
-      
+      localStorage.removeItem("discount");
       window.location.href = '/order-confirmed';
     })
        }

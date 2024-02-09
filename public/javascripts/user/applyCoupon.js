@@ -55,7 +55,7 @@ async function applyCoupon(){
      
       localStorage.setItem("discount", numericDiscount);
       
-      document.getElementById('applyButton').innerHTML="Coupon Applied successfully"
+      document.getElementById('applyButton').innerHTML="Remove Coupon"
       document.getElementById('viewCoupon').style.display = 'none';
   
           document.getElementById('discount').innerText = data.discountAmtOrPercentage
