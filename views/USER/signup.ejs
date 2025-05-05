@@ -108,7 +108,7 @@
         document.getElementById('confirmPasswordError').textContent = '';
         document.getElementById('phoneError').textContent = '';
         // Validate username
-        if (username.trim() === '') {
+        if (username.trim() === '' && username.match(/^[a-zA-Z ]+$/)) {
             document.getElementById('usernameError').textContent = 'Username is required';
             return false;
         }
