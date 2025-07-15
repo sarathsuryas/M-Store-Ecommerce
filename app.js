@@ -79,8 +79,8 @@ app.use(function(err, req, res, next) {
 
 });
 
-const port = 3000
+const port = process.env.PORT
 
 app.listen(port,()=>{
-  console.log("localhost connected sucessfully");
+  console.log('http://localhost:3000');
 })

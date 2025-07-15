@@ -8,7 +8,7 @@ const productcategories  = async (req,res,next) =>{
   try{
     const page = parseInt(req.query.page) || 1;
 const no_of_docs_each_page = 4;
-const totalCategory = await Category.countDocuments()
+const totalCategory = await Category.countDocuments() 
 const totalPages = Math.ceil(totalCategory / no_of_docs_each_page)
 const skip = (page - 1) * no_of_docs_each_page
 const  categories  = await Category.find().skip(skip).limit(no_of_docs_each_page)

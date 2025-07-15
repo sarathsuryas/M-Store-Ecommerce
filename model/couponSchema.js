@@ -36,8 +36,12 @@ const couponSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref:"users"
     }],
-  
-})
+
+},
+{
+  timestamps: true 
+}
+)
 
 const Coupon = mongoose.model('coupon', couponSchema);
 

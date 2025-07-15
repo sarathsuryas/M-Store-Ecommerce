@@ -1,258 +1,302 @@
 <%- include('../ADMIN/ADMINPARTIAL/header') %>
 
-<%- include('../ADMIN/ADMINPARTIAL/middle') %>
+    <%- include('../ADMIN/ADMINPARTIAL/middle') %>
 
-<main class="main-wrap">
-  <header class="main-header navbar">
-      <div class="col-search">
-          <form class="searchform">
-              <div class="input-group">
-                  <input list="search_terms" type="text" class="form-control" placeholder="Search term">
-                  <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
-              </div>
-              <datalist id="search_terms">
-                  <option value="Products">
-                  <option value="New orders">
-                  <option value="Apple iphone">
-                  <option value="Ahmed Hassan">
-              </datalist>
-          </form>
-      </div>
-      <div class="col-nav">
-          <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
-          <ul class="nav">
-              <li class="nav-item">
-                  <a class="nav-link btn-icon" href="#">
-                      <i class="material-icons md-notifications animation-shake"></i>
-                      <span class="badge rounded-pill">3</span>
-                  </a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
-              </li>
-              <li class="nav-item">
-                  <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
-              </li>
-              <li class="dropdown nav-item">
-                  <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
-                  <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
-                      <a class="dropdown-item text-brand" href="#"><img src="/adminassets/imgs/theme/flag-us.png" alt="English">English</a>
-                      <a class="dropdown-item" href="#"><img src="/adminassets/imgs/theme/flag-fr.png" alt="Français">Français</a>
-                      <a class="dropdown-item" href="#"><img src="/adminassets/imgs/theme/flag-jp.png" alt="Français">日本語</a>
-                      <a class="dropdown-item" href="#"><img src="/adminassets/imgs/theme/flag-cn.png" alt="Français">中国人</a>
-                  </div>
-              </li>
-              <li class="dropdown nav-item">
-                  <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="/adminassets/imgs/people/avatar2.jpg" alt="User"></a>
-                  <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                      <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
-                      <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
-                      <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
-                      <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
-                      <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
-                  </div>
-              </li>
-          </ul>
-      </div>
-  </header>
-  <section class="content-main">
-    <div class="content-header">
-        <div>
-            <h2 class="content-title card-title">Add Coupon</h2>
-        </div>
-        <div>
-            <input type="text" placeholder="Search order ID" class="form-control bg-white">
-        </div>
-    </div>
-            <div style="color: red;"><%= error %></div>
-    <form action="/admin/insert-coupon" method="POST" id="couponForm">
-        <div class="mb-3">
-            <label for="couponCode" class="form-label">Coupon Code</label>
-            <input type="text" class="form-control" id="couponCode" name="couponCode">
-            <span style="color: red;" id="couponCodeError"></span>
-        </div>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const couponCodeInput = document.getElementById('couponCode');
-    
-                couponCodeInput.addEventListener('input', function () {
-                    this.value = this.value.toUpperCase();
-                });
-            });
-        </script>
-        <div class="mb-3">
-            <label for="discountType" class="form-label">Discount Type</label>
-            <select class="form-select" id="discountType" name="discountType" onchange="toggleRedeemableAmount()">
-                <option value="percentage">Percentage</option>
-                <option value="fixedAmount" selected>Fixed Amount</option>
-            </select>
-            <span style="color: red;" id="discountTypeError"></span>
-        </div>
+        <main class="main-wrap">
+            <header class="main-header navbar">
+                <div class="col-search">
+                    <form class="searchform">
+                        <div class="input-group">
+                            <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                            <button class="btn btn-light bg" type="button"> <i
+                                    class="material-icons md-search"></i></button>
+                        </div>
+                        <datalist id="search_terms">
+                            <option value="Products">
+                            <option value="New orders">
+                            <option value="Apple iphone">
+                            <option value="Ahmed Hassan">
+                        </datalist>
+                    </form>
+                </div>
+                <div class="col-nav">
+                    <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i
+                            class="material-icons md-apps"></i> </button>
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <a class="nav-link btn-icon" href="#">
+                                <i class="material-icons md-notifications animation-shake"></i>
+                                <span class="badge rounded-pill">3</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn-icon darkmode" href="#"> <i
+                                    class="material-icons md-nights_stay"></i> </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="requestfullscreen nav-link btn-icon"><i
+                                    class="material-icons md-cast"></i></a>
+                        </li>
+                        <li class="dropdown nav-item">
+                            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage"
+                                aria-expanded="false"><i class="material-icons md-public"></i></a>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
+                                <a class="dropdown-item text-brand" href="#"><img
+                                        src="/adminassets/imgs/theme/flag-us.png" alt="English">English</a>
+                                <a class="dropdown-item" href="#"><img src="/adminassets/imgs/theme/flag-fr.png"
+                                        alt="Français">Français</a>
+                                <a class="dropdown-item" href="#"><img src="/adminassets/imgs/theme/flag-jp.png"
+                                        alt="Français">日本語</a>
+                                <a class="dropdown-item" href="#"><img src="/adminassets/imgs/theme/flag-cn.png"
+                                        alt="Français">中国人</a>
+                            </div>
+                        </li>
+                        <li class="dropdown nav-item">
+                            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
+                                aria-expanded="false"> <img class="img-xs rounded-circle"
+                                    src="/adminassets/imgs/people/avatar2.jpg" alt="User"></a>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                                <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit
+                                    Profile</a>
+                                <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account
+                                    Settings</a>
+                                <a class="dropdown-item" href="#"><i
+                                        class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                                <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                                <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help
+                                    center</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-danger" href="#"><i
+                                        class="material-icons md-exit_to_app"></i>Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </header>
+            <section class="content-main">
+                <div class="content-header">
+                    <div>
+                        <h2 class="content-title card-title">Add Coupon</h2>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Search order ID" class="form-control bg-white">
+                    </div>
+                </div>
+                <div style="color: red;">
+                    <%= error %>
+                </div>
+                <form action="/admin/insert-coupon" method="POST" id="couponForm">
+                    <div class="mb-3">
+                        <label for="couponCode" class="form-label">Coupon Code</label>
+                        <input type="text" class="form-control" id="couponCode" name="couponCode">
+                        <span style="color: red;" id="couponCodeError"></span>
+                    </div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const couponCodeInput = document.getElementById('couponCode');
 
-        <div class="mb-3" id="redeemableAmountContainer" style="display: none;">
-            <label for="redeemableAmount" class="form-label" >Redeemable Amount</label>
-            <input type="text" class="form-control" id="redeemableAmount" name="redeemableAmount">
-            <span style="color: red;" id="redeemableAmountError"></span>
-        </div>
+                            couponCodeInput.addEventListener('input', function () {
+                                this.value = this.value.toUpperCase();
+                            });
+                        });
+                    </script>
+                    <div class="mb-3">
+                        <label for="discountType" class="form-label">Discount Type</label>
+                        <select class="form-select" id="discountType" name="discountType"
+                            onchange="toggleRedeemableAmount()">
+                            <option value="percentage">Percentage</option>
+                            <option value="fixedAmount" selected>Fixed Amount</option>
+                        </select>
+                        <span style="color: red;" id="discountTypeError"></span>
+                    </div>
 
-        <div class="mb-3">
-            <label for="discountValue" class="form-label" id="discountAmtOrPercentageLabel">Discount Amount</label>
-            <input type="text" class="form-control" id="discountValue" name="discountAmtOrPercentage">
-            <span style="color: red;" id="discountError"></span>
-        </div>
+                    <div class="mb-3" id="redeemableAmountContainer" style="display: none;">
+                        <label for="redeemableAmount" class="form-label">Redeemable Amount</label>
+                        <input type="text" class="form-control" id="redeemableAmount" name="redeemableAmount">
+                        <span style="color: red;" id="redeemableAmountError"></span>
+                    </div>
 
-        <div class="mb-3">
-            <label for="minOrderAmount" class="form-label">Minimum Order Amount</label>
-            <input type="text" class="form-control" id="minOrderAmount" name="minOrderAmount">
-            <span style="color: red;" id="minOrderAmountError"></span>
-        </div>
+                    <div class="mb-3">
+                        <label for="discountValue" class="form-label" id="discountAmtOrPercentageLabel">Discount
+                            Amount</label>
+                        <input type="text" class="form-control" id="discountValue" name="discountAmtOrPercentage">
+                        <span style="color: red;" id="discountError"></span>
+                    </div>
 
-        <div class="mb-3">
-            <label for="expirationDate" class="form-label">Expiration Date</label>
-            <input type="date" class="form-control" id="expirationDate" name="expirationDate">
-            <span style="color: red;" id="expirationDateError"></span>
-        </div>
-        <button type="submit" class="btn btn-lg btn-primary">Add Coupon</button>
-    </form>
+                    <div class="mb-3">
+                        <label for="minOrderAmount" class="form-label">Minimum Order Amount</label>
+                        <input type="text" class="form-control" id="minOrderAmount" name="minOrderAmount">
+                        <span style="color: red;" id="minOrderAmountError"></span>
+                    </div>
 
-    <script>
-        function toggleRedeemableAmount() {
-            var discountType = document.getElementById("discountType").value;
-            var redeemableAmountContainer = document.getElementById("redeemableAmountContainer");
-            
-            // Show or hide the redeemable amount input based on the selected discount type
-            if (discountType === "percentage") {
-                redeemableAmountContainer.style.display = "block";
-                document.getElementById('discountAmtOrPercentageLabel').innerHTML = "Percentage"
-            } else {
-                redeemableAmountContainer.style.display = "none";
-                document.getElementById('discountAmtOrPercentageLabel').innerHTML = "Discount Amount"
-            }
-        }
-    </script>
-</section>
+                    <div class="mb-3">
+                        <label for="expirationDate" class="form-label">Expiration Date</label>
+                        <input type="date" class="form-control" id="expirationDate" name="expirationDate">
+                        <span style="color: red;" id="expirationDateError"></span>
+                    </div>
+                    <button type="submit" class="btn btn-lg btn-primary">Add Coupon</button>
+                </form>
+
+                <script>
+                    const expirationInput = document.getElementById('expirationDate');
+                    const today = new Date();
+                    today.setDate(today.getDate() + 1); // Only allow future dates (tomorrow onward)
+                    const yyyy = today.getFullYear();
+                    const mm = String(today.getMonth() + 1).padStart(2, '0');
+                    const dd = String(today.getDate()).padStart(2, '0');
+                    expirationInput.min = `${yyyy}-${mm}-${dd}`;
+               
+                </script>
+            </section>
 
 
-  <footer class="main-footer font-xs">
-      <div class="row pb-30 pt-15">
-          <div class="col-sm-6">
-              <script>
-              document.write(new Date().getFullYear())
-              </script> ©, Evara - HTML Ecommerce Template .
-          </div>
-          <div class="col-sm-6">
-              <div class="text-sm-end">
-                  All rights reserved
-              </div>
-          </div>
-      </div>
-  </footer>
-</main>
-<!-- validation -->
-
+            <footer class="main-footer font-xs">
+                <div class="row pb-30 pt-15">
+                    <div class="col-sm-6">
+                        <script>
+                            document.write(new Date().getFullYear())
+                        </script> ©, Evara - HTML Ecommerce Template .
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-sm-end">
+                            All rights reserved
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+        <!-- validation -->
 <script>
-   document.addEventListener('DOMContentLoaded', function () {
-    const couponForm = document.getElementById('couponForm');
+    document.addEventListener('DOMContentLoaded', function () {
+        const couponForm = document.getElementById('couponForm');
 
-    couponForm.addEventListener('submit', function (event) {
-        event.preventDefault();
+        couponForm.addEventListener('submit', function (event) {
+            event.preventDefault();
 
-        // Validate Coupon Code
-        const couponCodeInput = document.getElementById('couponCode');
-        const couponCodeError = document.getElementById('couponCodeError');
-        if (couponCodeInput.value.trim() === '') {
-            couponCodeError.textContent = 'Coupon Code is required.';
-            return;
-        } else {
-            couponCodeError.textContent = '';
-        }
-
-        // Validate Discount Type
-        const discountTypeSelect = document.getElementById('discountType');
-        const discountTypeError = document.getElementById('discountTypeError');
-        if (discountTypeSelect.value === '') {
-            discountTypeError.textContent = 'Please select a Discount Type.';
-            return;
-        } else {
-            discountTypeError.textContent = '';
-        }
-
-        // Validate Redeemable Amount (if applicable)
-        const redeemableAmountInput = document.getElementById('redeemableAmount');
-        const redeemableAmountContainer = document.getElementById('redeemableAmountContainer');
-        const redeemableAmountError = document.getElementById('redeemableAmountError');
-        if (redeemableAmountContainer.style.display !== 'none') {
-            const redeemableAmountValue = parseFloat(redeemableAmountInput.value.trim());
-            if (isNaN(redeemableAmountValue) || redeemableAmountValue <= 0) {
-                redeemableAmountError.textContent = 'Redeemable Amount must be a valid positive number.';
+            // Validate Coupon Code
+            const couponCodeInput = document.getElementById('couponCode');
+            const couponCodeError = document.getElementById('couponCodeError');
+            if (couponCodeInput.value.trim() === '') {
+                couponCodeError.textContent = 'Coupon Code is required.';
                 return;
             } else {
-                redeemableAmountError.textContent = '';
+                couponCodeError.textContent = '';
             }
-        }
 
-        // Validate Discount Value
-        const discountValueInput = document.getElementById('discountValue');
-        const discountError = document.getElementById('discountError');
-        const discountValue = parseFloat(discountValueInput.value.trim());
-        if (isNaN(discountValue) || discountValue <= 0) {
-            discountError.textContent = 'Discount Amount must be a valid positive number.';
-            return;
-        } else {
-            discountError.textContent = '';
-        }
+            // Validate Discount Type
+            const discountTypeSelect = document.getElementById('discountType');
+            const discountTypeError = document.getElementById('discountTypeError');
+            const discountType = discountTypeSelect.value;
+            if (discountType === '') {
+                discountTypeError.textContent = 'Please select a Discount Type.';
+                return;
+            } else {
+                discountTypeError.textContent = '';
+            }
 
-        // Validate Minimum Order Amount
-        const minOrderAmountInput = document.getElementById('minOrderAmount');
-        const minOrderAmountError = document.getElementById('minOrderAmountError');
-        const minOrderAmountValue = parseFloat(minOrderAmountInput.value.trim());
-        if (isNaN(minOrderAmountValue) || minOrderAmountValue <= 0) {
-            minOrderAmountError.textContent = 'Minimum Order Amount must be a valid positive number.';
-            return;
-        } else {
-            minOrderAmountError.textContent = '';
-        }
+            // Redeemable Amount (if visible)
+            const redeemableAmountInput = document.getElementById('redeemableAmount');
+            const redeemableAmountContainer = document.getElementById('redeemableAmountContainer');
+            const redeemableAmountError = document.getElementById('redeemableAmountError');
+            let redeemableAmountValue = null;
 
-        // Validate Expiration Date
-        const expirationDateInput = document.getElementById('expirationDate');
-        const expirationDateError = document.getElementById('expirationDateError');
-        if (expirationDateInput.value.trim() === '') {
-            expirationDateError.textContent = 'Expiration Date is required.';
-            return;
-        } else {
-            expirationDateError.textContent = '';
-        }
+            if (redeemableAmountContainer.style.display !== 'none') {
+                redeemableAmountValue = parseFloat(redeemableAmountInput.value.trim());
+                if (isNaN(redeemableAmountValue) || redeemableAmountValue <= 0) {
+                    redeemableAmountError.textContent = 'Redeemable Amount must be a valid positive number.';
+                    return;
+                } else {
+                    redeemableAmountError.textContent = '';
+                }
+            }
 
-        // If all validations pass, submit the form
-        couponForm.submit();
+            // Discount Value
+            const discountValueInput = document.getElementById('discountValue');
+            const discountError = document.getElementById('discountError');
+            const discountValue = parseFloat(discountValueInput.value.trim());
+            if (isNaN(discountValue) || discountValue <= 0) {
+                discountError.textContent = 'Discount must be a valid positive number.';
+                return;
+            } else {
+                discountError.textContent = '';
+            }
+
+            // Minimum Order Amount
+            const minOrderAmountInput = document.getElementById('minOrderAmount');
+            const minOrderAmountError = document.getElementById('minOrderAmountError');
+            const minOrderAmountValue = parseFloat(minOrderAmountInput.value.trim());
+            if (isNaN(minOrderAmountValue) || minOrderAmountValue <= 0) {
+                minOrderAmountError.textContent = 'Minimum Order Amount must be a valid positive number.';
+                return;
+            } else {
+                minOrderAmountError.textContent = '';
+            }
+
+            // Validate limits
+            if (discountType === 'fixedAmount') {
+                if (discountValue >= minOrderAmountValue) {
+                    discountError.textContent = 'Discount amount must be less than the Minimum Order Amount.';
+                    return;
+                }
+            }
+
+            if (discountType === 'percentage') {
+                if (discountValue <= 0 || discountValue >= 100) {
+                    discountError.textContent = 'Percentage must be between 1 and 99.';
+                    return;
+                }
+                if (redeemableAmountValue >= minOrderAmountValue) {
+                    redeemableAmountError.textContent = 'Redeemable Amount must be less than the Minimum Order Amount.';
+                    return;
+                }
+            }
+
+            // Expiration Date
+            const expirationDateInput = document.getElementById('expirationDate');
+            const expirationDateError = document.getElementById('expirationDateError');
+            const selectedDate = new Date(expirationDateInput.value);
+            const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0); // normalize
+
+            if (expirationDateInput.value.trim() === '') {
+                expirationDateError.textContent = 'Expiration Date is required.';
+                return;
+            } else if (selectedDate <= currentDate) {
+                expirationDateError.textContent = 'Expiration Date must be a future date.';
+                return;
+            } else {
+                expirationDateError.textContent = '';
+            }
+
+            // All good, submit form
+            couponForm.submit();
+        });
+
+        // Uppercase for coupon code
+        const couponCodeInput = document.getElementById('couponCode');
+        couponCodeInput.addEventListener('input', function () {
+            this.value = this.value.toUpperCase();
+        });
+
+        // Initial toggle
+        toggleRedeemableAmount();
+        document.getElementById('discountType').addEventListener('change', toggleRedeemableAmount);
     });
 
-    // Additional input formatting
-    const couponCodeInput = document.getElementById('couponCode');
-    couponCodeInput.addEventListener('input', function () {
-        this.value = this.value.toUpperCase();
-    });
+    function toggleRedeemableAmount() {
+        const discountType = document.getElementById("discountType").value;
+        const redeemableAmountContainer = document.getElementById("redeemableAmountContainer");
 
-    // Toggle redeemable amount initially based on the selected discount type
-    toggleRedeemableAmount();
-});
-
-function toggleRedeemableAmount() {
-    var discountType = document.getElementById("discountType").value;
-    var redeemableAmountContainer = document.getElementById("redeemableAmountContainer");
-
-    // Show or hide the redeemable amount input based on the selected discount type
-    if (discountType === "percentage") {
-        redeemableAmountContainer.style.display = "block";
-        document.getElementById('discountAmtOrPercentageLabel').innerHTML = "Percentage";
-    } else {
-        redeemableAmountContainer.style.display = "none";
-        document.getElementById('discountAmtOrPercentageLabel').innerHTML = "Discount Amount";
+        if (discountType === "percentage") {
+            redeemableAmountContainer.style.display = "block";
+            document.getElementById('discountAmtOrPercentageLabel').innerHTML = "Percentage";
+        } else {
+            redeemableAmountContainer.style.display = "none";
+            document.getElementById('discountAmtOrPercentageLabel').innerHTML = "Discount Amount";
+        }
     }
-}
-
 </script>
 
-<%- include('../ADMIN/ADMINPARTIAL/footer') %>
+
+
+        <%- include('../ADMIN/ADMINPARTIAL/footer') %>

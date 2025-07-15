@@ -1,618 +1,700 @@
 ﻿<%- include('../USERPARTIAL/header') %>
 
-<%- include('../USERPARTIAL/middle') %>
- 
-<!--   Modal Link -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <%- include('../USERPARTIAL/middle') %>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-crossorigin="anonymous"></script>
+        <!--   Modal Link -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-crossorigin="anonymous"></script>
-<!-- Modal link end -->
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+        <!-- Modal link end -->
 
 
 
-   
-    
-    <main class="main">
-        <div class="page-header breadcrumb-wrap">
-            <div class="container">
-                <div class="breadcrumb">
-                    <a href="/" rel="nofollow">Home</a>
-                    
-                    <span></span> Account
+
+
+        <main class="main">
+            <div class="page-header breadcrumb-wrap">
+                <div class="container">
+                    <div class="breadcrumb">
+                        <a href="/" rel="nofollow">Home</a>
+
+                        <span></span> Account
+                    </div>
                 </div>
             </div>
-        </div>
-        <section class="pt-150 pb-150">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-10 m-auto">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="dashboard-menu">
-                                    <ul class="nav flex-column" role="tablist">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="false"><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="track-order-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rs-shopping-cart-check mr-10"></i>Wallet</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rs-marker mr-10"></i>My Address</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="fi-rs-user mr-10"></i>Edit Account</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="/logout"><i class="fi-rs-sign-out mr-10"></i>Logout</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="tab-content dashboard-content">
-                                    <div class="tab-pane fade active show" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h5 class="mb-0">Hello <%= user.username %></h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <table class="table" id="myTable">
-                                                    <tbody>
-                                                        <tr>
-                                                            <th scope="row">Name</th>
-                                                            <td><%= user.username %></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">Email</th>
-                                                            <td><%= user.email %></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">Mobile</th>
-                                                            <td><%= mobile %></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">Change Password</th>
-                                                            <td>
-                                                                
-                                                                <button  class="btn btn-default" type="button" data-toggle="modal" data-target="#modalChangePassword">Change Password</button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <a style="color: red;" onclick="forgotPassword('<%= user.email %>')">Forgot Password ?</a>
-                                            </div>
-                                        </div>
-                                        
+            <section class="pt-150 pb-150">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-10 m-auto">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="dashboard-menu">
+                                        <ul class="nav flex-column" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" id="dashboard-tab" data-bs-toggle="tab"
+                                                    href="#dashboard" role="tab" aria-controls="dashboard"
+                                                    aria-selected="false"><i
+                                                        class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders"
+                                                    role="tab" aria-controls="orders" aria-selected="false"><i
+                                                        class="fi-rs-shopping-bag mr-10"></i>Orders</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="track-order-tab" data-bs-toggle="tab"
+                                                    href="#track-orders" role="tab" aria-controls="track-orders"
+                                                    aria-selected="false"><i
+                                                        class="fi-rs-shopping-cart-check mr-10"></i>Wallet</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="address-tab" data-bs-toggle="tab"
+                                                    href="#address" role="tab" aria-controls="address"
+                                                    aria-selected="true"><i class="fi-rs-marker mr-10"></i>My
+                                                    Address</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab"
+                                                    href="#account-detail" role="tab" aria-controls="account-detail"
+                                                    aria-selected="true"><i class="fi-rs-user mr-10"></i>Edit
+                                                    Account</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="/logout"><i
+                                                        class="fi-rs-sign-out mr-10"></i>Logout</a>
+                                            </li>
+                                        </ul>
                                     </div>
-                                    <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h5 class="mb-0">Your Orders</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="table-responsive">
-                                                    <table class="table display" id="order-table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Order Id</th>
-                                                                <th>Date</th>
-                                                                <th>Status</th>
-                                                                <th>Total</th>
-                                                                <th>Actions</th>
-                                                            </tr>
-                                                        </thead>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="tab-content dashboard-content">
+                                        <div class="tab-pane fade active show" id="dashboard" role="tabpanel"
+                                            aria-labelledby="dashboard-tab">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5 class="mb-0">Hello <%= user.username %>
+                                                    </h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <table class="table" id="myTable">
                                                         <tbody>
-                                                            <% if (orders) { %>
-                                                                <% orders.forEach(item => { %>
-                                                                    <tr>
-                                                                        <td><%= item.orderId %></td>
-                                                                        <td><%= item.date.toLocaleString() %></td>
-                                                                        <td><%= item.orderStatus %></td>
-                                                                        <td><%= item.totalShipment %></td>
-                                                                        <td><a href="/order-detailed-view/<%= item.id %>" class="btn-small d-block">View</a></td>
-                                                                    </tr>
-                                                                <% }); %>
-                                                           <% } %>
-                                                            
+                                                            <tr>
+                                                                <th scope="row">Name</th>
+                                                                <td>
+                                                                    <%= user.username %>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">Email</th>
+                                                                <td>
+                                                                    <%= user.email %>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">Mobile</th>
+                                                                <td>
+                                                                    <%= mobile %>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">Change Password</th>
+                                                                <td>
+
+                                                                    <button class="btn btn-default" type="button"
+                                                                        data-toggle="modal"
+                                                                        data-target="#modalChangePassword">Change
+                                                                        Password</button>
+                                                                </td>
+                                                            </tr>
                                                         </tbody>
                                                     </table>
+                                                    <a style="color: red;"
+                                                        onclick="forgotPassword('<%= user.email %>')">Forgot Password
+                                                        ?</a>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="tab-pane fade" id="orders" role="tabpanel"
+                                            aria-labelledby="orders-tab">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5 class="mb-0">Your Orders</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <table class="table display" id="order-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Order Id</th>
+                                                                    <th>Date</th>
+                                                                    <th>Status</th>
+                                                                    <th>Total</th>
+                                                                    <th>Actions</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <% if (orders) { %>
+                                                                    <% orders.forEach(item=> {
+                                                                        let value = 0; 
+                                                                        item.products.forEach(product => {
+                                                                        if (!product.cancelStatus) {
+                                                                        value += product.total;
+                                                                        }
+                                                                        });
+                                                                        %>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <%= item.orderId %>
+                                                                            </td>
+                                                                            <td>
+                                                                                <%= item.date.toLocaleString() %>
+                                                                            </td>
+                                                                            <td>
+                                                                                <%= item.orderStatus %>
+                                                                            </td>
+                                                                            <td>
+                                                                                <%= value %>
+                                                                            </td>
+                                                                            <td><a href="/order-detailed-view/<%= item.id %>"
+                                                                                    class="btn-small d-block">View</a>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <% }); %>
+                                                                            <% } %>
+                                                            </tbody>
+
+                                                        </table>
 
                                                         <!-- pagination -->
 
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h5 class="mb-0">Wallet Transactions</h5>
-                                            </div>
-                                            <div class="card-body text-center">
-                                                <span class="d-block"><h3>Balance</h3></span>
-                                                <% if(wallet) { %>
-                                                <span class="d-block">₹ <%= wallet.amount %></span>
-                                                <% } %>
-                                                <table class="table table-bordered mt-3" id="wallet-table">
-                                                    <thead>
-                                                        
-                                                        
-
-                                                        <tr>
-                                                            <th>sl no</th>
-                                                            <th>Date</th>
-                                                            <th>Order Id</th>
-                                                            <th>Amount</th>
-                                                            <th>Payment Status</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <% if(orders) {%>
-                                                            <% var n = 1 %>
-                                                            <% orders.forEach(item =>  { %>
-                                                                <% if(item.paymentMethod === "wallet"||item.paymentStatus==="success")    { %>
-                                                                    <% item.products.forEach((product)=>{%>
-                                                                        <tr>
-                                                                            <td><%= n %></td>
-                                                                            <td><%= item.date.toLocaleString() %></td>
-                                                                            <td><%= item.orderId %></td>
-                                                                            <td><%= product.total%></td>
-                                                                            <% if(product.cancelStatus===true){%>
-                                                                                <td>Refunded</td>
-                                                                                <% }else{%>
-                                                                                    <td>Paid</td>
-                                                                                    <% }%>
-                                                                        </tr>
-                                                       
-                                                                    <%})%>
-                                                    
-                                                        <% n++ %>
-                                                       <% } %> 
-                                                        <%  }) %>
+                                        <div class="tab-pane fade" id="track-orders" role="tabpanel"
+                                            aria-labelledby="track-orders-tab">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5 class="mb-0">Wallet Transactions</h5>
+                                                </div>
+                                                <div class="card-body text-center">
+                                                    <span class="d-block">
+                                                        <h3>Balance</h3>
+                                                    </span>
+                                                    <% if(wallet) { %>
+                                                        <span class="d-block">₹ <%= wallet.amount %></span>
                                                         <% } %>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
+                                                            <table class="table table-bordered mt-3" id="wallet-table">
+                                                                <thead>
 
-                
 
-                                    
-                                    <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
-                                        <div class="row">
-                                            <% if (adrs) { %>
-                                                <% var number = 0 %>
-                                                <% adrs.address.forEach(item => { %>
-                                                    <div class="col-md-6 mb-4">
-                                                        <div class="card">
-                                                            <div class="card-header bg-success text-white">
-                                                                <h5 class="mb-0">Address <%= ++number %> </h5>
-                                                            </div>
-                                                            <div class="card-body">
-                                                                <address class="mb-0">
-                                                                    <%= item.homeAddress %><br>
-                                                                    <%= item.locality %><br>
-                                                                    <%= item.city %> <br>
-                                                                    <%= item.pinCode %>
-                                                                </address>
-                                                                <p><%= item.state %> India</p>
-                                                                <a href="/edit-address/<%= item.id %>" class="btn btn-secondary btn-sm" >Edit </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                <% }); %>
-                                            <% } %>
-                                    
-                                            <div class="col-md-12 text-center mb-4">
-                                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalAddAddress">Add address</button>
+
+                                                                    <tr>
+                                                                        <th>sl no</th>
+                                                                        <th>Date</th>
+                                                                        <th>Order Id</th>
+                                                                        <th>Amount</th>
+                                                                        <th>Payment Status</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <% if(orders) {%>
+                                                                        <% var n=1 %>
+                                                                            <% orders.forEach(item=> { %>
+                                                                                <% if(item.paymentMethod==="wallet"
+                                                                                    ||item.paymentStatus==="success" ) {
+                                                                                    %>
+                                                                                    <% item.products.forEach((product)=>
+                                                                                        {%>
+                                                                                        <tr>
+                                                                                            <td>
+                                                                                                <%= n %>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <%= item.date.toLocaleString()
+                                                                                                    %>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <%= item.orderId %>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <%= product.total%>
+                                                                                            </td>
+                                                                                            <%
+                                                                                                if(product.cancelStatus===true){%>
+                                                                                                <td>Refunded</td>
+                                                                                                <% }else{%>
+                                                                                                    <td>Paid</td>
+                                                                                                    <% }%>
+                                                                                        </tr>
+
+                                                                                        <%})%>
+
+                                                                                            <% n++ %>
+                                                                                                <% } %>
+                                                                                                    <% }) %>
+                                                                                                        <% } %>
+                                                                </tbody>
+                                                            </table>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    
-                                    <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
-                                        <div class="card">
-                                            <div class="card-header bg-success text-white">
-                                                <h5>Edit Account</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <form name="enq">
-                                                    <div class="row">
-                                                        <div class="form-group col-md-12">
-                                                            <label for="username">User Name <span class="required">*</span></label>
-                                                            <input required="" class="form-control" name="name" type="text" value="<%= user.username %>" id="userName">
-                                                            <span style="color: red;" id="userNameError"></span>
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label for="Email">Email Address <span class="required">*</span></label>
-                                                            <input required="" class="form-control" name="email" type="email" value="<%= user.email %>" id="Email">
-                                                            <span style="color: red;" id="EmailError"></span>
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label for="phone">Phone No <span class="required">*</span></label>
-                                                            <input required="" class="form-control" name="phone" type="text" value="<%= mobile %>" id="Phone">
-                                                            <span style="color: red;" id="PhoneError"></span>
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <button type="button" class="btn btn-success" onclick="validateAndEditProfile()">Save</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
+
+
+
+
+                                        <div class="tab-pane fade" id="address" role="tabpanel"
+                                            aria-labelledby="address-tab">
+                                            <div class="row">
+                                                <% if (adrs) { %>
+                                                    <% var number=0 %>
+                                                        <% adrs.address.forEach(item=> { %>
+                                                            <div class="col-md-6 mb-4">
+                                                                <div class="card">
+                                                                    <div class="card-header bg-success text-white">
+                                                                        <h5 class="mb-0">Address <%= ++number %>
+                                                                        </h5>
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <address class="mb-0">
+                                                                            <%= item.homeAddress %><br>
+                                                                                <%= item.locality %><br>
+                                                                                    <%= item.city %> <br>
+                                                                                        <%= item.pinCode %>
+                                                                        </address>
+                                                                        <p>
+                                                                            <%= item.state %> India
+                                                                        </p>
+                                                                        <a href="/edit-address/<%= item.id %>"
+                                                                            class="btn btn-secondary btn-sm">Edit </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <% }); %>
+                                                                <% } %>
+
+                                                                    <div class="col-md-12 text-center mb-4">
+                                                                        <button type="button" class="btn btn-success"
+                                                                            data-toggle="modal"
+                                                                            data-target="#modalAddAddress">Add
+                                                                            address</button>
+                                                                    </div>
                                             </div>
                                         </div>
+
+                                        <div class="tab-pane fade" id="account-detail" role="tabpanel"
+                                            aria-labelledby="account-detail-tab">
+                                            <div class="card">
+                                                <div class="card-header bg-success text-white">
+                                                    <h5>Edit Account</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <form name="enq">
+                                                        <div class="row">
+                                                            <div class="form-group col-md-12">
+                                                                <label for="username">User Name <span
+                                                                        class="required">*</span></label>
+                                                                <input required="" class="form-control" name="name"
+                                                                    type="text" value="<%= user.username %>"
+                                                                    id="userName">
+                                                                <span style="color: red;" id="userNameError"></span>
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label for="Email">Email Address <span
+                                                                        class="required">*</span></label>
+                                                                <input required="" class="form-control" name="email"
+                                                                    type="email" value="<%= user.email %>" id="Email">
+                                                                <span style="color: red;" id="EmailError"></span>
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label for="phone">Phone No <span
+                                                                        class="required">*</span></label>
+                                                                <input required="" class="form-control" name="phone"
+                                                                    type="text" value="<%= mobile %>" id="Phone">
+                                                                <span style="color: red;" id="PhoneError"></span>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <button type="button" class="btn btn-success"
+                                                                    onclick="validateAndEditProfile()">Save</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
-                                    
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </section>
+        </main>
+
+        <!-- Preloader Start -->
+
+
+        <!-- Modal change password -->
+
+        <section>
+            <div class="modal fade" id="modalChangePassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                aria-hidden="true">
+
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
+
+                            <h4 class="modal-title w-100 font-weight-bold">Change Password</h4>
+
+
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body mx-3">
+                            <div class="md-form mb-5">
+                                <i class="fas fa-lock prefix grey-text"></i>
+                                <input type="password" id="oldPassword" class="form-control validate">
+
+                                <label data-error="wrong" data-success="right" for="oldPassword">Old Password</label>
+                                <div id="error" style="color: red;"></div>
+                                <div id="OLDPASSWORD" style="color: red;"></div>
+                            </div>
+                            <div class="md-form mb-5">
+                                <i class="fas fa-lock prefix grey-text"></i>
+                                <input type="password" id="newPassword" class="form-control validate">
+                                <label data-error="wrong" data-success="right" for="newPassword">New Password</label>
+                                <div id="NEWPASSWORD" style="color: red;"></div>
+                            </div>
+                            <div class="md-form mb-4">
+                                <i class="fas fa-lock prefix grey-text"></i>
+                                <input type="password" id="confirmPassword" class="form-control validate">
+                                <label data-error="wrong" data-success="right" for="confirmPassword">Confirm
+                                    Password</label>
+                            </div>
+                            <div id="CONFIRMPASSWORD" style="color: red;"></div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button class="btn btn-deep-orange" type="submit"
+                                onclick="changePasswordValidation()">Change Password</button>
+
+
+                        </div>
+
+                    </div>
+                </div>
             </div>
+
         </section>
-    </main>
-    
-    <!-- Preloader Start -->
-    
 
-<!-- Modal change password -->
+        <!-- Modal for add address -->
+        <section>
+            <div class="modal fade" id="modalAddAddress" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h4 class="modal-title w-100 font-weight-bold">Add Address</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/add-address-from-profile" method="POST" onsubmit="return addAddress()">
+                                <div class="form-row">
+                                    <div class="col-md-6 mb-4">
+                                        <label for="inputName">Name</label>
+                                        <input type="text" class="form-control" id="inputUsername"
+                                            placeholder="Your name" name="username">
+                                        <span style="color:red" id="usernameError"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <label for="inputMobile">Mobile Number</label>
+                                        <input type="tel" class="form-control" id="inputMobile"
+                                            placeholder="10-digit mobile number" name="phoneNumber">
+                                        <span style="color: red;" id="mobileError"></span>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-6 mb-4">
+                                        <label for="inputPincode">Pincode</label>
+                                        <input type="text" class="form-control" id="inputPinCode" placeholder="Pincode"
+                                            name="pincode">
+                                        <span style="color:red" id="pincodeError"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <label for="inputLocality">Locality</label>
+                                        <input type="text" class="form-control" id="inputLocality"
+                                            placeholder="Locality" name="locality">
+                                        <span style="color: red;" id="localityError"></span>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-12 mb-4">
+                                        <label for="inputAddress">Address</label>
+                                        <input type="text" class="form-control" id="inputAddress" placeholder="Address"
+                                            name="address">
+                                        <span style="color: red;" id="addressError"></span>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-6 mb-4">
+                                        <label for="inputCity">City/District/Town</label>
+                                        <input type="text" class="form-control" id="inputcdt"
+                                            placeholder="City/District/Town" name="city">
+                                        <span style="color: red;" id="cdtError"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <label for="selectState">Select State</label>
+                                        <select id="inputSelectState" name="selectedState" class="form-control">
+                                            <!-- Include options for different states -->
+                                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                            <option value="Assam">Assam</option>
+                                            <option value="Bihar">Bihar</option>
+                                            <option value="Chhattisgarh">Chhattisgarh</option>
+                                            <option value="Goa">Goa</option>
+                                            <option value="Gujarat">Gujarat</option>
+                                            <option value="Haryana">Haryana</option>
+                                            <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                            <option value="Jharkhand">Jharkhand</option>
+                                            <option value="Karnataka">Karnataka</option>
+                                            <option value="Kerala">Kerala</option>
+                                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                            <option value="Maharashtra">Maharashtra</option>
+                                            <option value="Manipur">Manipur</option>
+                                            <option value="Meghalaya">Meghalaya</option>
+                                            <option value="Mizoram">Mizoram</option>
+                                            <option value="Nagaland">Nagaland</option>
+                                            <option value="Odisha">Odisha</option>
+                                            <option value="Punjab">Punjab</option>
+                                            <option value="Rajasthan">Rajasthan</option>
+                                            <option value="Sikkim">Sikkim</option>
+                                            <option value="Tamil Nadu">Tamil Nadu</option>
+                                            <option value="Telangana">Telangana</option>
+                                            <option value="Tripura">Tripura</option>
+                                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                            <option value="Uttarakhand">Uttarakhand</option>
+                                            <option value="West Bengal">West Bengal</option>
+                                            <!-- Add more options as needed -->
+                                        </select>
+                                        <span style="color: red;" id="stateError"></span>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-6 mb-4">
+                                        <label for="inputAlternatePhone">Alternate Phone</label>
+                                        <input type="tel" class="form-control" id="inputAltPhone"
+                                            placeholder="Alternate phone" name="altPhone">
+                                        <span style="color: red;" id="altError"></span>
+                                    </div>
+                                </div>
 
-    <section>
-        <div class="modal fade" id="modalChangePassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header text-center">
-                    
-                  <h4 class="modal-title w-100 font-weight-bold">Change Password</h4>
-                 
-                
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save and Deliver Here <i
+                                    class="fas fa-truck ml-1"></i></button>
+                        </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="modal-body mx-3">
-                  <div class="md-form mb-5">
-                    <i class="fas fa-lock prefix grey-text"></i>
-                    <input type="password" id="oldPassword" class="form-control validate">
-                    
-                    <label data-error="wrong" data-success="right" for="oldPassword">Old Password</label>
-                    <div id="error" style="color: red;"></div>
-                    <div id="OLDPASSWORD" style="color: red;"></div>
-                  </div>
-                <div class="md-form mb-5">
-                    <i class="fas fa-lock prefix grey-text"></i>
-                    <input type="password" id="newPassword" class="form-control validate">
-                    <label data-error="wrong" data-success="right" for="newPassword">New Password</label>
-                <div id="NEWPASSWORD" style="color: red;"></div>
-                  </div>
-                  <div class="md-form mb-4">
-                    <i class="fas fa-lock prefix grey-text"></i>
-                    <input type="password" id="confirmPassword" class="form-control validate">
-                    <label data-error="wrong" data-success="right" for="confirmPassword">Confirm Password</label>
-                  </div>
-                  <div id="CONFIRMPASSWORD" style="color: red;"></div>
-                </div>
-                <div class="modal-footer d-flex justify-content-center">
-                  <button class="btn btn-deep-orange" type="submit" onclick="changePasswordValidation()">Change Password</button>
-                  
-                  
-                </div>
-               
-              </div>
             </div>
-          </div>
- 
-    </section>
-    
-    <!-- Modal for add address -->
-    <section>
-        <div class="modal fade" id="modalAddAddress" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h4 class="modal-title w-100 font-weight-bold">Add Address</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="/add-address-from-profile" method="POST" onsubmit="return addAddress()">
-                        <div class="form-row">
-                            <div class="col-md-6 mb-4">
-                                <label for="inputName">Name</label>
-                                <input type="text" class="form-control" id="inputUsername" placeholder="Your name"
-                                    name="username">
-                                    <span style="color:red" id="usernameError"></span>
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <label for="inputMobile">Mobile Number</label>
-                                <input type="tel" class="form-control" id="inputMobile"
-                                    placeholder="10-digit mobile number" name="phoneNumber">
-                                    <span style="color: red;" id="mobileError"></span>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-6 mb-4">
-                                <label for="inputPincode">Pincode</label>
-                                <input type="text" class="form-control" id="inputPinCode" placeholder="Pincode"
-                                    name="pincode">
-                                    <span style="color:red" id="pincodeError"></span>
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <label for="inputLocality">Locality</label>
-                                <input type="text" class="form-control" id="inputLocality" placeholder="Locality"
-                                    name="locality">
-                                    <span style="color: red;" id="localityError" ></span>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-12 mb-4">
-                                <label for="inputAddress">Address</label>
-                                <input type="text" class="form-control" id="inputAddress" placeholder="Address"
-                                    name="address">
-                                    <span style="color: red;" id="addressError"></span>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-6 mb-4">
-                                <label for="inputCity">City/District/Town</label>
-                                <input type="text" class="form-control" id="inputcdt"
-                                    placeholder="City/District/Town" name="city">
-                                    <span style="color: red;" id="cdtError"></span>
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <label for="selectState">Select State</label>
-                                <select id="inputSelectState" name="selectedState" class="form-control">
-                                    <!-- Include options for different states -->
-                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                                    <option value="Assam">Assam</option>
-                                    <option value="Bihar">Bihar</option>
-                                    <option value="Chhattisgarh">Chhattisgarh</option>
-                                    <option value="Goa">Goa</option>
-                                    <option value="Gujarat">Gujarat</option>
-                                    <option value="Haryana">Haryana</option>
-                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
-                                    <option value="Jharkhand">Jharkhand</option>
-                                    <option value="Karnataka">Karnataka</option>
-                                    <option value="Kerala">Kerala</option>
-                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
-                                    <option value="Maharashtra">Maharashtra</option>
-                                    <option value="Manipur">Manipur</option>
-                                    <option value="Meghalaya">Meghalaya</option>
-                                    <option value="Mizoram">Mizoram</option>
-                                    <option value="Nagaland">Nagaland</option>
-                                    <option value="Odisha">Odisha</option>
-                                    <option value="Punjab">Punjab</option>
-                                    <option value="Rajasthan">Rajasthan</option>
-                                    <option value="Sikkim">Sikkim</option>
-                                    <option value="Tamil Nadu">Tamil Nadu</option>
-                                    <option value="Telangana">Telangana</option>
-                                    <option value="Tripura">Tripura</option>
-                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
-                                    <option value="Uttarakhand">Uttarakhand</option>
-                                    <option value="West Bengal">West Bengal</option>
-                                    <!-- Add more options as needed -->
-                                </select>
-                                <span style="color: red;" id="stateError"></span>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-6 mb-4">
-                                <label for="inputAlternatePhone">Alternate Phone</label>
-                                <input type="tel" class="form-control" id="inputAltPhone"
-                                    placeholder="Alternate phone" name="altPhone">
-                                    <span style="color: red;" id="altError"></span>  
-                            </div>
-                        </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Save and Deliver Here <i
-                            class="fas fa-truck ml-1"></i></button>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
 
-    </section>
-                         <!-- validation for add address -->
-                         <script>
-                            function addAddress() {
-                              // Reset previous error messages
-                              resetErrors();
-                          
-                              // Basic form validation
-                              const username = document.getElementById('inputUsername').value.trim();
-                              const mobile = document.getElementById('inputMobile').value.trim();
-                              const pinCode = document.getElementById('inputPinCode').value.trim();
-                              const locality = document.getElementById('inputLocality').value.trim();
-                              const address = document.getElementById('inputAddress').value.trim();
-                              const cdt = document.getElementById('inputcdt').value.trim();
-                              const selectState = document.getElementById('inputSelectState').value.trim();
-                              const altPhone = document.getElementById('inputAltPhone').value.trim();
-                          
-                              // Validate each field
-                              if (!isValidText(username)) {
-                                showError('usernameError', 'Please enter a valid name with only letters.');
-                                return false;
-                              }
-                          
-                              if (!isValidMobile(mobile)) {
-                                showError('mobileError', 'Please enter a valid 10-digit mobile number.');
-                                return false;
-                              }
-                          
-                              if (!isValidPinCode(pinCode)) {
-                                showError('pincodeError', 'Please enter a valid 6-digit pin code.');
-                                return false;
-                              }
-                          
-                              if (!isValidText(locality)) {
-                                showError('localityError', 'Please enter a valid locality with only letters.');
-                                return false;
-                              }
-                          
-                              if (!isValidText(address)) {
-                                showError('addressError', 'Please enter a valid address with only letters.');
-                                return false;
-                              }
-                          
-                              if (!isValidText(cdt)) {
-                                showError('cdtError', 'Please enter a valid city/district/town with only letters.');
-                                return false;
-                              }
-                          
-                              if (!selectState) {
-                                showError('stateError', 'Please select your state.');
-                                return false;
-                              }
-                          
-                              if (altPhone && !isValidMobile(altPhone)) {
-                                showError('altError', 'Please enter a valid 10-digit alternate phone number or leave it blank.');
-                                return false;
-                              }
-                          
-                              // If all validation passes, the form will be submitted
-                              return true;
-                            }
-                          
-                            function isValidText(value) {
-                              // Allow only letters and spaces
-                              return /^[A-Za-z\s]+$/.test(value);
-                            }
-                          
-                            function isValidMobile(value) {
-                              // Allow only 10-digit mobile numbers
-                              return /^\d{10}$/.test(value);
-                            }
-                          
-                            function isValidPinCode(value) {
-                              // Allow only 6-digit pin codes
-                              return /^\d{6}$/.test(value);
-                            }
-                          
-                            function showError(elementId, errorMessage) {
-                              document.getElementById(elementId).textContent = errorMessage;
-                            }
-                          
-                            function resetErrors() {
-                              const errorElements = document.querySelectorAll('[id$="Error"]');
-                              errorElements.forEach(element => {
-                                element.textContent = '';
-                              });
-                            }
-                          </script>
-                          
-        
-   <!-- validation for edit profile -->
-   <script>
-    function validateAndEditProfile() {
-        // Reset error messages
-        document.getElementById("userNameError").innerHTML = "";
-        document.getElementById("EmailError").innerHTML = "";
-        document.getElementById("PhoneError").innerHTML = "";
+        </section>
+        <!-- validation for add address -->
+        <script>
+            function addAddress() {
+                // Reset previous error messages
+                resetErrors();
 
-        // Get input values
-        var userName = document.getElementById("userName").value.trim()
-        var email = document.getElementById("Email").value.trim()
-        var phone = document.getElementById("Phone").value.trim()
+                // Basic form validation
+                const username = document.getElementById('inputUsername').value.trim();
+                const mobile = document.getElementById('inputMobile').value.trim();
+                const pinCode = document.getElementById('inputPinCode').value.trim();
+                const locality = document.getElementById('inputLocality').value.trim();
+                const address = document.getElementById('inputAddress').value.trim();
+                const cdt = document.getElementById('inputcdt').value.trim();
+                const selectState = document.getElementById('inputSelectState').value.trim();
+                const altPhone = document.getElementById('inputAltPhone').value.trim();
 
-       // Validate User Name
-       var usernameRegex = /^[A-Za-z\s]+$/
-       if (!usernameRegex.test(userName)) {
-           document.getElementById("userNameError").innerHTML = "Invalid User Name";
-                return;
-        }
+                // Validate each field
+                if (!isValidText(username)) {
+                    showError('usernameError', 'Please enter a valid name with only letters.');
+                    return false;
+                }
 
-        // Validate Email
-        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            document.getElementById("EmailError").innerHTML = "Invalid Email Address";
-            return;
-        }
+                if (!isValidMobile(mobile)) {
+                    showError('mobileError', 'Please enter a valid 10-digit mobile number.');
+                    return false;
+                }
 
-        // Validate Phone
-        var phoneRegex = /^\d{10}$/;
-        if (!phoneRegex.test(phone)) {
-            document.getElementById("PhoneError").innerHTML = "Invalid Phone Number";
-            return;
-        }
+                if (!isValidPinCode(pinCode)) {
+                    showError('pincodeError', 'Please enter a valid 6-digit pin code.');
+                    return false;
+                }
 
-        // If all validations pass, proceed with sending data to the backend
-        editProfile(userName, email, phone);
-    }
+                if (!isValidText(locality)) {
+                    showError('localityError', 'Please enter a valid locality with only letters.');
+                    return false;
+                }
 
-   
-</script>
+                if (!isValidText(address)) {
+                    showError('addressError', 'Please enter a valid address with only letters.');
+                    return false;
+                }
+
+                if (!isValidText(cdt)) {
+                    showError('cdtError', 'Please enter a valid city/district/town with only letters.');
+                    return false;
+                }
+
+                if (!selectState) {
+                    showError('stateError', 'Please select your state.');
+                    return false;
+                }
+
+                if (altPhone && !isValidMobile(altPhone)) {
+                    showError('altError', 'Please enter a valid 10-digit alternate phone number or leave it blank.');
+                    return false;
+                }
+
+                // If all validation passes, the form will be submitted
+                return true;
+            }
+
+            function isValidText(value) {
+                // Allow only letters and spaces
+                return /^[A-Za-z\s]+$/.test(value);
+            }
+
+            function isValidMobile(value) {
+                // Allow only 10-digit mobile numbers
+                return /^\d{10}$/.test(value);
+            }
+
+            function isValidPinCode(value) {
+                // Allow only 6-digit pin codes
+                return /^\d{6}$/.test(value);
+            }
+
+            function showError(elementId, errorMessage) {
+                document.getElementById(elementId).textContent = errorMessage;
+            }
+
+            function resetErrors() {
+                const errorElements = document.querySelectorAll('[id$="Error"]');
+                errorElements.forEach(element => {
+                    element.textContent = '';
+                });
+            }
+        </script>
 
 
-<!-- password change  validation -->
-  <script>
-    function changePasswordValidation() {
-        // Reset error messages
-        document.getElementById("error").innerHTML = "";
-        document.getElementById("OLDPASSWORD").innerHTML = "";
-        document.getElementById("NEWPASSWORD").innerHTML = "";
-        document.getElementById("CONFIRMPASSWORD").innerHTML = "";
+        <!-- validation for edit profile -->
+        <script>
+            function validateAndEditProfile() {
+                // Reset error messages
+                document.getElementById("userNameError").innerHTML = "";
+                document.getElementById("EmailError").innerHTML = "";
+                document.getElementById("PhoneError").innerHTML = "";
 
-        // Get input values
-        var oldPassword = document.getElementById("oldPassword").value;
-        var newPassword = document.getElementById("newPassword").value;
-        var confirmPassword = document.getElementById("confirmPassword").value;
+                // Get input values
+                var userName = document.getElementById("userName").value.trim()
+                var email = document.getElementById("Email").value.trim()
+                var phone = document.getElementById("Phone").value.trim()
 
-        // Validate Old Password
-        if (oldPassword.trim() === "") {
-            document.getElementById("OLDPASSWORD").innerHTML = "Old Password is required";
-            return;
-        }
+                // Validate User Name
+                var usernameRegex = /^[A-Za-z\s]+$/
+                if (!usernameRegex.test(userName)) {
+                    document.getElementById("userNameError").innerHTML = "Invalid User Name";
+                    return;
+                }
 
-        // Validate New Password
-        if (newPassword.trim() === "") {
-            document.getElementById("NEWPASSWORD").innerHTML = "New Password is required";
-            return;
-        }
+                // Validate Email
+                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    document.getElementById("EmailError").innerHTML = "Invalid Email Address";
+                    return;
+                }
 
-        // Check if New Password and Confirm Password match
-        if (newPassword !== confirmPassword) {
-            document.getElementById("CONFIRMPASSWORD").innerHTML = "New Password and Confirm Password do not match";
-            return;
-        }
+                // Validate Phone
+                var phoneRegex = /^\d{10}$/;
+                if (!phoneRegex.test(phone)) {
+                    document.getElementById("PhoneError").innerHTML = "Invalid Phone Number";
+                    return;
+                }
 
-        // Validate the strength of the New Password
-        if (!isStrongPassword(newPassword)) {
-            document.getElementById("NEWPASSWORD").innerHTML = "Password must be at least 8 characters long "
-            return;
-        }
+                // If all validations pass, proceed with sending data to the backend
+                editProfile(userName, email, phone);
+            }
 
-        // If all validations pass, proceed with sending data to the backend
-        updatePassword(oldPassword, newPassword);
-    }
 
-    function isStrongPassword(password) {
-        // Use a regular expression to check for password strength
-        var passwordRegex = /^.{8,}$/;
-        return passwordRegex.test(password);
-    }
+        </script>
 
-  </script>
+
+        <!-- password change  validation -->
+        <script>
+            function changePasswordValidation() {
+                // Reset error messages
+                document.getElementById("error").innerHTML = "";
+                document.getElementById("OLDPASSWORD").innerHTML = "";
+                document.getElementById("NEWPASSWORD").innerHTML = "";
+                document.getElementById("CONFIRMPASSWORD").innerHTML = "";
+
+                // Get input values
+                var oldPassword = document.getElementById("oldPassword").value;
+                var newPassword = document.getElementById("newPassword").value;
+                var confirmPassword = document.getElementById("confirmPassword").value;
+
+                // Validate Old Password
+                if (oldPassword.trim() === "") {
+                    document.getElementById("OLDPASSWORD").innerHTML = "Old Password is required";
+                    return;
+                }
+
+                // Validate New Password
+                if (newPassword.trim() === "") {
+                    document.getElementById("NEWPASSWORD").innerHTML = "New Password is required";
+                    return;
+                }
+
+                // Check if New Password and Confirm Password match
+                if (newPassword !== confirmPassword) {
+                    document.getElementById("CONFIRMPASSWORD").innerHTML = "New Password and Confirm Password do not match";
+                    return;
+                }
+
+                // Validate the strength of the New Password
+                if (!isStrongPassword(newPassword)) {
+                    document.getElementById("NEWPASSWORD").innerHTML = "Password must be at least 8 characters long "
+                    return;
+                }
+
+                // If all validations pass, proceed with sending data to the backend
+                updatePassword(oldPassword, newPassword);
+            }
+
+            function isStrongPassword(password) {
+                // Use a regular expression to check for password strength
+                var passwordRegex = /^.{8,}$/;
+                return passwordRegex.test(password);
+            }
+
+        </script>
         <script src="/userAssets/assets/js/vendor/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
@@ -620,22 +702,22 @@ crossorigin="anonymous"></script>
             $(document).ready(function () {
                 $('#order-table').DataTable({
                     "order": [[1, "desc"]],
-        
+
                 });
             });
         </script>
-                <script>
-                    $(document).ready(function () {
-                        $('#wallet-table').DataTable({
-                            "wallet": [[1, "desc"]],
-                
-                        });
-                    });
-                </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="/javascripts/user/changePassword.js"></script>
-    <script src="/javascripts/user/editProfile.js"></script>
-    <script src="/javascripts/user/forgotPassword.js"></script>
-   
-    <!-- Vendor JS-->
-    <%- include('../USERPARTIAL/footer') %>
+        <script>
+            $(document).ready(function () {
+                $('#wallet-table').DataTable({
+                    "wallet": [[1, "desc"]],
+
+                });
+            });
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/javascripts/user/changePassword.js"></script>
+        <script src="/javascripts/user/editProfile.js"></script>
+        <script src="/javascripts/user/forgotPassword.js"></script>
+
+        <!-- Vendor JS-->
+        <%- include('../USERPARTIAL/footer') %>

@@ -1,4 +1,4 @@
-function cancelIndividualOrder(individualOrderId,orderId){
+function cancelIndividualOrder(individualOrderId,orderId,productId,quantity,couponCode){
   
   Swal.fire({
     title: "Submit your Reason for Cancellation",
@@ -16,7 +16,7 @@ function cancelIndividualOrder(individualOrderId,orderId){
         headers:{
           'Content-Type':'application/json'
         },
-        body:JSON.stringify({individualOrderId,orderId,reason})
+        body:JSON.stringify({individualOrderId,orderId,reason,productId,quantity,couponCode})
        })
         
         if (response.ok) {

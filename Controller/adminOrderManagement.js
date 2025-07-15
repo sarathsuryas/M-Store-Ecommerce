@@ -23,7 +23,7 @@ const orderDetails = async (req,res,next) =>{
   try{
   const id = req.params.id;
   const order = await Order.findOne({_id:id}).populate('userId').populate('products.productId')
-  
+  console.log(order)
   
     return res.render('ADMIN/orderDetails',{order})
   }catch(err){

@@ -152,22 +152,39 @@ const calculateProductTotal = async (productId, quantity) => {
   }
 }
 
-const goToCart = async (req, res, next) => {
 
+
+const goToCart = async (req, res, next) => {
   try {
     const userId = req.user.user._id;
-    // for Identifying in top of the page. page logged or not
     const loggedIn = req.user.user ? true : false;
 
-    const cartOfTheUser = await Cart.findOne({ userId: userId }).populate('products.productId')
-    const coupon = await Coupon.find()
-    const date = new Date()
+    // Fetch the user's cart with populated product details
+    const cart = await Cart.findOne({ userId }).populate('products.productId');
+    const coupon = await Coupon.find();
+    const date = new Date();
 
-    return res.render('USER/cart', { cart: cartOfTheUser, coupon, date, loggedIn });
+    let outOfStockItems = [];
+
+    if (cart) {
+      outOfStockItems = cart.products.filter(product =>
+        !product.productId || product.productId.stock === 0 || product.quantity > product.productId.stock
+      );
+    }
+
+    return res.render('USER/cart', {
+      cart,
+      coupon,
+      date,
+      loggedIn,
+      outOfStockItems
+    });
+
   } catch (err) {
-    next(err); // Pass the error to the next middleware
+    next(err);
   }
 };
+
 
 const updateQuantity = async (req, res) => {
 
@@ -261,6 +278,16 @@ const deleteCart = async (req, res, next) => {
   }
 }
 
+const postCheckOut = async (req,res,next) =>{
+  try {
+    
+    res.status(200).json({ success: true, redirectTo: '/checkout' });  
+  } catch (error) {
+    next(err)
+  }
+}
+
+
 const checkout = async (req, res, next) => {
 
   try {
@@ -268,7 +295,6 @@ const checkout = async (req, res, next) => {
       const userId = req.user.user._id;
       const couponCode = req.session.couponCode;
       delete req.session.couponCode;
-
       const cart = await Cart.findOne({ userId: userId }).populate('products.productId');
       const address = await Address.findOne({ userId: userId })
          if(cart.products.length!==0){
@@ -282,4 +308,4 @@ const checkout = async (req, res, next) => {
 }
 
 
-module.exports = { addToCart, goToCart, updateQuantity, deleteCart, checkout }
+module.exports = { addToCart, goToCart, updateQuantity, deleteCart, checkout,postCheckOut }

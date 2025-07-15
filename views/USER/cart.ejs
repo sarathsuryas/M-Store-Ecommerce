@@ -71,7 +71,8 @@
                                                             <a href="#" class="qty-down"
                                                                 data-product-id="<%= product.productId._id %>"><i
                                                                     class="fi-rs-angle-small-down"></i></a>
-                                                            <span class="qty-val" data-product-id="<%= product.productId._id %>">
+                                                            <span class="qty-val"
+                                                                data-product-id="<%= product.productId._id %>">
                                                                 <%= product.quantity %>
                                                             </span>
                                                             <a href="#" class="qty-up"
@@ -83,7 +84,7 @@
                                                     <td class="text-right" data-title="Cart">
 
                                                         <span class="price-span">
-                                                              <%= product.total %>
+                                                            <%= product.total %>
                                                         </span>
 
                                                     </td>
@@ -130,7 +131,7 @@
                                 </div> -->
                                         <!-- <p class="mt-15 mb-30">Flat rate: <span class="font-xl text-brand fw-900">5%</span></p> -->
                                         <form class="field_form shipping_calculator">
-                                           
+
                                         </form>
                                         <div class="panel-body">
                                             <p class="mb-30 font-sm">If you have a coupon code, please apply it below.
@@ -174,7 +175,8 @@
                                                             <td class="cart_total_amount">
 
                                                                 <span class="font-lg fw-900 text-brand" id="cartTotal">₹
-                                                                    <%= cart.cartTotal %></span>
+                                                                    <%= cart.cartTotal %>
+                                                                </span>
 
                                                             </td>
                                                             <td class="cart_total_label">Coupon Discount</td>
@@ -195,14 +197,16 @@
 
                                                                     <span class="font-xl fw-900 text-brand"
                                                                         id="totalShipment">₹ <%= cart.totalShipment %>
-                                                                            </span>
+                                                                    </span>
 
                                                                 </strong></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <a href="/checkout" class="btn "> <i class="fi-rs-box-alt mr-10"></i>
+
+                                            <a onclick="collectCartData()" class="btn "> <i
+                                                    class="fi-rs-box-alt mr-10"></i>
                                                 Proceed To CheckOut</a>
                                         </div>
                                     </div>
@@ -281,36 +285,36 @@
                                     <tbody>
 
 
-                                          <% if(cart&&cart.cartTotal!=null) { %>
-                                        <% if(coupon) { %>
-                                            <% coupon.forEach( item=> { %>
+                                        <% if(cart&&cart.cartTotal!=null) { %>
+                                            <% if(coupon) { %>
+                                                <% coupon.forEach( item=> { %>
 
-                                                <% if (cart.cartTotal  >= item.minOrderAmount && date <=
-                                                        item.expirationDate && item.isActive==="Active" ) { %>
-                                                        <tr>
-                                                            <td>
-                                                                <%= item.code %>
-                                                            </td>
-                                                            <td>
-                                                                <%= item.discountType %>
-                                                            </td>
-                                                            <td>
-                                                                <%= item.discountAmtOrPercentage %>
-                                                            </td>
+                                                    <% if (cart.cartTotal>= item.minOrderAmount && date <=
+                                                            item.expirationDate && item.isActive==="Active" ) { %>
+                                                            <tr>
+                                                                <td>
+                                                                    <%= item.code %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= item.discountType %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= item.discountAmtOrPercentage %>
+                                                                </td>
 
-                                                            <td>
-                                                                <%= item.minOrderAmount %>
-                                                            </td>
+                                                                <td>
+                                                                    <%= item.minOrderAmount %>
+                                                                </td>
 
-                                                            <td>
-                                                                <%= item.expirationDate.toLocaleString() %>
-                                                            </td>
-                                                        </tr>
+                                                                <td>
+                                                                    <%= item.expirationDate.toLocaleString() %>
+                                                                </td>
+                                                            </tr>
 
-                                                        <% } %>
-                                                            <% }) %>
-                                                                <% } %>
-                                                                <% } %>
+                                                            <% } %>
+                                                                <% }) %>
+                                                                    <% } %>
+                                                                        <% } %>
                                     </tbody>
                                 </table>
 
@@ -334,140 +338,142 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <!-- quantity update -->
         <script>
-            document.addEventListener("DOMContentLoaded",function (){
-                 const qtyUpIcons = document.querySelectorAll('.qty-up')
-                 const qtyDownIcons = document.querySelectorAll('.qty-down')
-                   function updateGrandTotal (){
-                      const priceSpans = document.querySelectorAll(".price-span")
-                      let total = 0;
-      
-                      priceSpans.forEach((priceSpan)=>{
-                          total+=parseFloat(priceSpan.textContent)
-                          const cartTotalElement = document.getElementById("cartTotal");
-                          const totalShipmentElement = document.getElementById("totalShipment")
-                          totalShipmentElement.textContent=total+40
-                          cartTotalElement.textContent = total
-                      })
-                   }
-      
-                  // forEach for quantity up
-                 qtyUpIcons.forEach((icon) =>{
-                  icon.addEventListener("click",function(event){
-                      event.preventDefault()
-      
-                  const productId = icon.getAttribute("data-product-id");
-                  
-                  fetch('/updatequantity',{
-                      method:"PUT",
-                      headers: {
-                       "Content-Type":"application/json"   
-                      },
-                      body:JSON.stringify({
-                       productId,
-                       action:"increase"
-                      }),
-                  })
-                  .then(async(response) => { 
-              
-              if (response.ok) {
-                  return response.json();
-              } else {
-                await  Swal.fire({
-                    icon: "error",
-                     title: "Oops...",
-                      text: "Out of Stock!",
-                    footer: '<a href="#">Why do I have this issue?</a>'
-                      });
-                    return location.reload()
-                           }
-                      })
-                    .then((data)=>{
-                      console.log(data.total)
-                      
-                      // Update the displayed quantity without realoding
-                      const quantitySpan = icon.previousElementSibling;
-                      console.log("quantity span:",quantitySpan);
-                      
-                      quantitySpan.textContent = data.quantity
-                      console.log(data.quantity)
-                      //Update the subtotal
-                      const row = icon.closest("tr");
-                      const priceSpan = row.querySelector(
-                          ".price-span"
-                      );
-                      console.log("price span:",priceSpan);
-                      priceSpan.textContent = data.total;
-      
-                      // Update the grand total
-                      updateGrandTotal();
-      
-                    })
-                     .catch((error)=>{
-                      console.log(
-                          "An error happened during the increase process: " +
-                                  error  
-                      )
-                     });
-                  
-                  })
-      
-                 })
-            
-            // forEach for quantity down icon
-            qtyDownIcons.forEach((icon)=>{
-              icon.addEventListener("click",function(event){
-                  event.preventDefault()
-      
-              const productId = icon.getAttribute("data-product-id");
-      
-              fetch('/updatequantity',{
-                  method:"PUT",
-                  headers:{
-                     "Content-Type":"application/json" 
-                  },
-                  body:JSON.stringify({
-                     productId,
-                     action:"decrease" 
-                  }),
-              })
-                 .then((response)=>response.json())
-                 .then((data)=>{
-                  console.log("quantity decreased");
-                   console.log(data.total);
-                   
-                   // update displayed quantity without realoding
-                   const quantitySpan = icon.nextElementSibling;
-                   console.log("quantity span:",quantitySpan)
-                  quantitySpan.textContent = data.quantity
-                  console.log(data.quantity)
+            document.addEventListener("DOMContentLoaded", function () {
+                const qtyUpIcons = document.querySelectorAll('.qty-up')
+                const qtyDownIcons = document.querySelectorAll('.qty-down')
+                function updateGrandTotal() {
+                    const priceSpans = document.querySelectorAll(".price-span")
+                    let total = 0;
 
-                   // Update the subtotal
-                   const row = icon.closest("tr")
-                   const priceSpan = row.querySelector(
-                      ".price-span"
-                   );
-                  console.log("Price span",priceSpan);
-                  priceSpan.textContent = data.total;
-      
-                  // Update the grand total
-                  updateGrandTotal();
-      
-                 })
-                 .catch((error)=>{
-                  console.log(
-                      "An error happened during the increase process: " +
-                                  error
-                  );
-                 })
-              })
+                    priceSpans.forEach((priceSpan) => {
+                        total += parseFloat(priceSpan.textContent)
+                        const cartTotalElement = document.getElementById("cartTotal");
+                        const totalShipmentElement = document.getElementById("totalShipment")
+                        totalShipmentElement.textContent = total + 40
+                        cartTotalElement.textContent = total
+                    })
+                }
+
+                // forEach for quantity up
+                qtyUpIcons.forEach((icon) => {
+                    icon.addEventListener("click", function (event) {
+                        event.preventDefault()
+
+                        const productId = icon.getAttribute("data-product-id");
+
+                        fetch('/updatequantity', {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                productId,
+                                action: "increase"
+                            }),
+                        })
+                            .then(async (response) => {
+
+                                if (response.ok) {
+                                    return response.json();
+                                } else {
+                                    await Swal.fire({
+                                        icon: "error",
+                                        title: "Oops...",
+                                        text: "Out of Stock!",
+                                        footer: '<a href="#">Why do I have this issue?</a>'
+                                    });
+                                    return location.reload()
+                                }
+                            })
+                            .then((data) => {
+                                console.log(data.total)
+
+                                // Update the displayed quantity without realoding
+                                const quantitySpan = icon.previousElementSibling;
+                                console.log("quantity span:", quantitySpan);
+
+                                quantitySpan.textContent = data.quantity
+                                console.log(data.quantity)
+                                //Update the subtotal
+                                const row = icon.closest("tr");
+                                const priceSpan = row.querySelector(
+                                    ".price-span"
+                                );
+                                console.log("price span:", priceSpan);
+                                priceSpan.textContent = data.total;
+
+                                // Update the grand total
+                                updateGrandTotal();
+
+                            })
+                            .catch((error) => {
+                                console.log(
+                                    "An error happened during the increase process: " +
+                                    error
+                                )
+                            });
+
+                    })
+
+                })
+
+                // forEach for quantity down icon
+                qtyDownIcons.forEach((icon) => {
+                    icon.addEventListener("click", function (event) {
+                        event.preventDefault()
+
+                        const productId = icon.getAttribute("data-product-id");
+
+                        fetch('/updatequantity', {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                productId,
+                                action: "decrease"
+                            }),
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                console.log("quantity decreased");
+                                console.log(data.total);
+
+                                // update displayed quantity without realoding
+                                const quantitySpan = icon.nextElementSibling;
+                                console.log("quantity span:", quantitySpan)
+                                quantitySpan.textContent = data.quantity
+                                console.log(data.quantity)
+
+                                // Update the subtotal
+                                const row = icon.closest("tr")
+                                const priceSpan = row.querySelector(
+                                    ".price-span"
+                                );
+                                console.log("Price span", priceSpan);
+                                priceSpan.textContent = data.total;
+
+                                // Update the grand total
+                                updateGrandTotal();
+
+                            })
+                            .catch((error) => {
+                                console.log(
+                                    "An error happened during the increase process: " +
+                                    error
+                                );
+                            })
+                    })
+                })
+
+                // Call this function initially to set the grand total
+                updateGrandTotal();
+
+
             })
-            
-                        // Call this function initially to set the grand total
-                        updateGrandTotal();
-          })
-             
-              
-              </script>
+
+
+        </script>
 
         <!-- delete product -->
         <script>
@@ -510,6 +516,65 @@
             }
 
         </script>
+
+        <!-- SweetAlert2 CDN -->
+
+        <script>
+            async function collectCartData() {
+                const cartItems = [];
+                document.querySelectorAll('.qty-val').forEach(span => {
+                    const productId = span.getAttribute('data-product-id');
+                    const quantity = parseInt(span.textContent.trim(), 10);
+                    cartItems.push({ productId, quantity });
+                });
+
+                cartItems.shift(); // Optional: Remove first item if needed
+
+                try {
+                    const response = await fetch('/checkout', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ cartItems })
+                    });
+
+                    const result = await response.json();
+                          
+                    if (!response.ok) {
+                        // Backend reported an error (e.g., out of stock)
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Stock Issue',
+                            text: result.error || 'One or more products are out of stock.',
+                            confirmButtonColor: '#d33'
+                        });
+                        return;
+                    }
+
+                    // ✅ Proceed to next step (redirect, payment, etc.)
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Stock Confirmed!',
+                        text: 'All items are in stock. Redirecting to payment...',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }).then(() => {
+                        window.location.href = '/checkout'; // Adjust this path as needed
+                    });
+
+                } catch (error) {
+                    console.error('Checkout error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Server Error',
+                        text: 'Something went wrong during checkout.',
+                        confirmButtonColor: '#d33'
+                    });
+                }
+            }
+        </script>
+
 
         <!-- Preloader Start -->
         <!-- <div id="preloader-active">

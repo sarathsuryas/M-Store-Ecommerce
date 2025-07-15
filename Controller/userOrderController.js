@@ -387,6 +387,7 @@ const orderDetailedView = async(req,res,next) =>{
   try{
    const orderId = req.params.id
    const order = await Order.findById(orderId).populate('products.productId')
+
    if(!order){
      return res.status(500).json({err:"order not found in database"})
    }
@@ -394,44 +395,103 @@ const orderDetailedView = async(req,res,next) =>{
   return res.render('USER/orderDetailedView',{order})
   }catch(err){
     next(err); // Pass the error to the next middleware
-  }
+  } 
  }
 
- const individualOrder = async (req,res,next) =>{
-  const {individualOrderId,orderId,reason} = req.body
-  const userId = req.user.user._id
-  try{
-    const order = await Order.findById(orderId)
-     const result = order.products.findIndex((item)=> individualOrderId===item._id.toString())
-     order.products[result].cancelStatus=true
-     order.products[result].reason=reason;
+ const individualOrder = async (req, res, next) => {
+  const { individualOrderId, orderId, reason, productId, quantity, couponCode } = req.body;
+  const userId = req.user.user._id;
 
-await order.save()
-console.log('//////////////////////////////////////////////////////');
-if(order.paymentStatus==="success"){
-     let wallet = await Wallet.findOne({userId:userId})
-     if(!wallet){
-      wallet = new Wallet({
-        userId:userId,
-        amount:0
-      })
-     }
-     if(order.appliedCouponValue!==0){
-      order.products[result].total -= order.appliedCouponValue;
-      order.appliedCouponValue = 0
-      await order.save()
-     }
+  try {
+    const order = await Order.findById(orderId);
+    if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
 
-     const amount = order.products[result].total;
-    wallet.amount += amount;
-    await wallet.save();
-}
+    const productIndex = order.products.findIndex(
+      (item) => individualOrderId === item._id.toString()
+    );
 
-return res.status(200).json({success:true})
-  // console.log(e);
-  }catch (err) {
-    next(err); // Pass the error to the next middleware
+    if (productIndex === -1) {
+      return res.status(400).json({ success: false, message: 'Product not found in order' });
+    }
+
+    const canceledProduct = order.products[productIndex];
+    if (canceledProduct.cancelStatus === true) {
+      return res.status(400).json({ success: false, message: 'Product already cancelled' });
+    }
+
+    // Mark the item as cancelled
+    canceledProduct.cancelStatus = true;
+    canceledProduct.reason = reason;
+
+    const total = canceledProduct.total;
+    const originalShipment = order.totalShipment;
+    let totalBeforeCoupon = 0;
+
+    // Handle coupon logic
+    let coupon;
+    if (couponCode && couponCode.trim() !== "") {
+      coupon = await Coupon.findOne({ code: couponCode });
+    }
+
+    if (coupon) {
+      if (coupon.discountType === 'fixedAmount') {
+        totalBeforeCoupon = originalShipment - total + coupon.discountAmtOrPercentage;
+      } else if (coupon.discountType === 'percentage') {
+         let beforeTotal = originalShipment - total 
+        const percentageAmount =  beforeTotal * coupon.discountAmtOrPercentage / 100
+         const max = Math.max(percentageAmount , coupon.maxRedeemableAmt)
+        totalBeforeCoupon = originalShipment - total + max 
+       
+      }
+
+      if (coupon.minOrderAmount < totalBeforeCoupon) {
+        // Only apply discount if the adjusted total meets the coupon minimum
+        order.totalShipment = totalBeforeCoupon - (coupon.discountType === 'fixedAmount'
+          ? coupon.discountAmtOrPercentage
+          : coupon.maxRedeemableAmt);
+      } else {
+        // Cancelled item caused coupon to become invalid
+        order.appliedCouponValue = 0;
+        order.totalShipment = totalBeforeCoupon;
+      }
+    } else {
+      order.totalShipment = originalShipment - total;
+    }
+
+    await order.save();
+
+    // Restore stock
+    const product = await Product.findById(productId);
+    if (product) {
+      product.stock += parseInt(quantity);
+      await product.save();
+    }
+
+    // Refund logic (for successful payment)
+    if (order.paymentStatus === 'success') {
+      let wallet = await Wallet.findOne({ userId });
+      if (!wallet) {
+        wallet = new Wallet({ userId, amount: 0 });
+      }
+
+      // Deduct applied coupon value only for the cancelled item
+      let refundAmount = canceledProduct.total;
+      if (order.appliedCouponValue && order.appliedCouponValue > 0) {
+        refundAmount -= order.appliedCouponValue;
+        order.appliedCouponValue = 0;
+        await order.save();
+      }
+
+      wallet.amount += refundAmount;
+      await wallet.save();
+    }
+
+    return res.status(200).json({ success: true });
+
+  } catch (err) {
+    next(err);
   }
-}
+};
+
  
 module.exports={placeOrderCod,orderConfirmed,orderDetailedView,individualOrder,placeOrderOnlinePayment,paymentStatus,placeOrderWallet}

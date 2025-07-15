@@ -83,8 +83,12 @@
                                     
                                     <td><%= a %></td>
                                     <td><b><%= item.code %></b></td>
-                                    <td><%= item.discountType %></td>
-                                    <td><%= item.discountValue %></td>
+                                    <td><%= item.discountType  %></td>
+                                      <% if (item.discountType === 'percentage') { %>
+                                 <td><%= item.discountAmtOrPercentage %> % </td>
+                                              <% } else  { %>
+                                 <td>  ₹ <%= item.discountAmtOrPercentage %> </td>
+                                              <% } %>
                                     <td><%= item.minOrderAmount %></td>
                                     <td><%= item.maxRedeemableAmt %></td>
                                     <td><%= item.expirationDate.toLocaleString() %></td>

@@ -7,7 +7,7 @@ const addresscontroller = require('../Controller/userAddressController')
 const passwordcontroller = require('../Controller/userPasswordReset')
 const authenticate = require("../middleware/user/jwt")
 const  checkLoggedIn = require("../middleware/user/forLoggedIn")
-
+const validateCartStock = require("../middleware/user/validateCartStock")
 
 /* GET users listing. */
 // user authentications
@@ -30,7 +30,9 @@ router.post('/addtocart',authenticate,cartcontroller.addToCart)
 router.get('/gotocart',authenticate,cartcontroller.goToCart)
 router.put('/updatequantity',authenticate,cartcontroller.updateQuantity)
 router.delete('/deletecart',authenticate,cartcontroller.deleteCart)
+
 router.get('/checkout',authenticate,cartcontroller.checkout)
+.post('/checkout',authenticate,validateCartStock,cartcontroller.postCheckOut)
 
 //order
 router.post('/place-order-cod',authenticate,ordercontroller.placeOrderCod)
