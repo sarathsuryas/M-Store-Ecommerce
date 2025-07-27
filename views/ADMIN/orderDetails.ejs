@@ -94,27 +94,37 @@
                             </div>
                             <div class="col-lg-6 col-md-6 ms-auto text-md-end">
                                 <select class="form-select d-inline-block mb-lg-0 mb-15 mw-200" id="selectedStatus">
-
-                                    <% if(order.orderStatus==='Pending' ) { %>
+                                    <% if (order.orderStatus==='Pending' ) { %>
                                         <option value="Confirmed">Confirmed</option>
                                         <option value="Pending" selected>Pending</option>
                                         <option value="Cancelled">Cancelled</option>
-                                        <% } else if(order.orderStatus==="Confirmed" ) { %>
+                                        <% } else if (order.orderStatus==='Confirmed' ) { %>
                                             <option value="Shipped">Shipped</option>
                                             <option value="Confirmed" selected>Confirmed</option>
                                             <option value="Cancelled">Cancelled</option>
-                                            <% } else if(order.orderStatus==='Shipped' ) { %>
+                                            <% } else if (order.orderStatus==='Shipped' ) { %>
                                                 <option value="Out for Delivery">Out for Delivery</option>
                                                 <option value="Shipped" selected>Shipped</option>
-                                                <% } else { %>
-                                                    <option value="Out for Delivery">Out For Delivery</option>
-                                                    <option value="Delivered" selected>Delivered</option>
-                                                    <option value="Cancelled" selected>Cancelled</option>
-                                                    <% } %>
+                                                <% } else if (order.orderStatus==='Out for Delivery' ) { %>
+                                                    <option value="Delivered">Delivered</option>
+                                                    <option value="Out for Delivery" selected>Out for Delivery</option>
+                                                    <% } else if (order.orderStatus==='Delivered' ) { %>
+                                                        <option value="Delivered" selected>Delivered</option>
+                                                        <% } else if (order.orderStatus==='Cancelled' ) { %>
+                                                            <option value="Cancelled" selected>Cancelled</option>
+                                                            <% } %>
                                 </select>
-                                <a class="btn btn-primary" onclick="getStatus('<%= order.id %>')">Save</a>
-                                <a class="btn btn-secondary print ms-2" href="#"><i
-                                        class="icon material-icons md-print"></i></a>
+
+                                <% const isCancelled=order.orderStatus==='Cancelled' ; %>
+                                    <a class="btn btn-primary <%= isCancelled ? 'disabled' : '' %>" <% if (!isCancelled)
+                                        { %>
+                                        onclick="getStatus('<%= order.id %>', '<%= order.userId._id %>')"
+                                                <% } %>>
+                                                    Save
+                                    </a>
+
+                                    <a class="btn btn-secondary print ms-2" href="#"><i
+                                            class="icon material-icons md-print"></i></a>
                             </div>
 
                         </div>
@@ -244,15 +254,17 @@
                                                                     <dt>Shipping cost:</dt>
                                                                     <dd>₹ 40</dd>
                                                                 </dl>
-                                                                 <dl class="dlist">
+                                                                <dl class="dlist">
                                                                     <dt>discount</dt>
-                                                                    <dd>₹ <%= order.appliedCouponValue %> </dd>
+                                                                    <dd>₹ <%= order.appliedCouponValue %>
+                                                                    </dd>
                                                                 </dl>
                                                                 <dl class="dlist">
                                                                     <dt>Grand total:</dt>
 
-                                                                    <dd> <b class="h5">₹  <%= value ? value + 40 - order.appliedCouponValue : 0 %>
-                                                                                </b>
+                                                                    <dd> <b class="h5">₹ <%= value ? value + 40 -
+                                                                                order.appliedCouponValue : 0 %>
+                                                                        </b>
                                                                     </dd>
                                                                 </dl>
                                                                 <dl class="dlist">

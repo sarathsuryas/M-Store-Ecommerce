@@ -147,7 +147,7 @@
                                                             <tbody>
                                                                 <% if (orders) { %>
                                                                     <% orders.forEach(item=> {
-                                                                        let value = 0; 
+                                                                        let value = 40;
                                                                         item.products.forEach(product => {
                                                                         if (!product.cancelStatus) {
                                                                         value += product.total;
@@ -165,8 +165,11 @@
                                                                                 <%= item.orderStatus %>
                                                                             </td>
                                                                             <td>
-                                                                                <%= value %>
+                                                                                <%= item.orderStatus==='Cancelled' ?
+                                                                                    value - 40 : value -
+                                                                                    item.appliedCouponValue %>
                                                                             </td>
+
                                                                             <td><a href="/order-detailed-view/<%= item.id %>"
                                                                                     class="btn-small d-block">View</a>
                                                                             </td>
@@ -193,61 +196,69 @@
                                                     <span class="d-block">
                                                         <h3>Balance</h3>
                                                     </span>
-                                                    <% if(wallet) { %>
-                                                        <span class="d-block">₹ <%= wallet.amount %></span>
-                                                        <% } %>
-                                                            <table class="table table-bordered mt-3" id="wallet-table">
-                                                                <thead>
+                                                    <% if (walletBalance) { %>
+                                                        <span class="d-block">₹ <%= walletBalance.amount %></span>
+                                                        <% } else { %>
+                                                            <span class="d-block">₹ 0</span>
+                                                            <% } %>
+
+                                                                <table class="table table-bordered mt-3"
+                                                                    id="wallet-table">
+                                                                    <thead>
 
 
 
-                                                                    <tr>
-                                                                        <th>sl no</th>
-                                                                        <th>Date</th>
-                                                                        <th>Order Id</th>
-                                                                        <th>Amount</th>
-                                                                        <th>Payment Status</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <% if(orders) {%>
-                                                                        <% var n=1 %>
-                                                                            <% orders.forEach(item=> { %>
-                                                                                <% if(item.paymentMethod==="wallet"
-                                                                                    ||item.paymentStatus==="success" ) {
-                                                                                    %>
-                                                                                    <% item.products.forEach((product)=>
-                                                                                        {%>
-                                                                                        <tr>
-                                                                                            <td>
-                                                                                                <%= n %>
-                                                                                            </td>
-                                                                                            <td>
-                                                                                                <%= item.date.toLocaleString()
-                                                                                                    %>
-                                                                                            </td>
-                                                                                            <td>
-                                                                                                <%= item.orderId %>
-                                                                                            </td>
-                                                                                            <td>
-                                                                                                <%= product.total%>
-                                                                                            </td>
-                                                                                            <%
-                                                                                                if(product.cancelStatus===true){%>
-                                                                                                <td>Refunded</td>
-                                                                                                <% }else{%>
-                                                                                                    <td>Paid</td>
-                                                                                                    <% }%>
-                                                                                        </tr>
-
-                                                                                        <%})%>
-
-                                                                                            <% n++ %>
+                                                                        <tr>
+                                                                            <th>sl no</th>
+                                                                            <th>Date</th>
+                                                                            <th>Order Id</th>
+                                                                            <th>Amount</th>
+                                                                            <th>Payment Status</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <% if (wallet && wallet.length> 0) { %>
+                                                                            <% let n=1; %>
+                                                                                <% wallet.forEach(item=> { %>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <%= n %>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <%= item.createdAt.toLocaleString()
+                                                                                                %>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <%= item.orderId?.orderId
+                                                                                                || "N/A" %>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <%= item.amount || 0 %>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <% if (item.status) { %>
+                                                                                                Refunded
+                                                                                                <% } else { %>
+                                                                                                    paid
+                                                                                                    <% } %>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <% n++; %>
+                                                                                        <% }); %>
+                                                                                            <% } else { %>
+                                                                                                <tr>
+                                                                                                    <td colspan="5"
+                                                                                                        class="text-center">
+                                                                                                        No
+                                                                                                        wallet
+                                                                                                        transactions
+                                                                                                        found
+                                                                                                    </td>
+                                                                                                </tr>
                                                                                                 <% } %>
-                                                                                                    <% }) %>
-                                                                                                        <% } %>
-                                                                </tbody>
-                                                            </table>
+                                                                    </tbody>
+
+                                                                </table>
                                                 </div>
                                             </div>
                                         </div>

@@ -1,5 +1,5 @@
 
-function getStatus(orderId){
+function getStatus(orderId,userId){
   var selectedStatus = document.getElementById('selectedStatus').value;
    
    Swal.fire({
@@ -12,7 +12,7 @@ function getStatus(orderId){
   .then((result) => {
     /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {
-      statusUpdate(orderId,selectedStatus)
+      statusUpdate(orderId,selectedStatus,userId)
      
     } else if (result.isDenied) {
       Swal.fire("Changes are not saved", "", "info");
@@ -20,7 +20,7 @@ function getStatus(orderId){
   });
 }
 
-async function statusUpdate(Id,status){
+async function statusUpdate(Id,status,userId){
   
   const orderId = Id
   const selectedStatus = status
@@ -30,7 +30,7 @@ async function statusUpdate(Id,status){
       headers:{
         'Content-Type':'application/json'
       },
-      body:JSON.stringify({orderId,selectedStatus})
+      body:JSON.stringify({orderId,selectedStatus,userId})
   })
   if(response.ok){
     Swal.fire("Saved!", "", "success");

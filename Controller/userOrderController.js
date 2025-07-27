@@ -7,7 +7,8 @@ const Cart = require('../model/cartSchema');
 var randtoken = require('rand-token');
 var razorpay = require('../utils/razorpay');
 const Coupon = require('../model/couponSchema');
-const Wallet = require('../model/walletSchema')
+const Wallet = require('../model/walletSchema');
+const WalletBalance = require('../model/walletBalanceShema');
 
 
 const placeOrderCod = async (req, res,next) => {
@@ -113,7 +114,7 @@ products.forEach(async (product, index) => {
 
 const placeOrderOnlinePayment = async (req,res,next) =>{
   try {
-    const { payment, addressId, discountPrice:discountPriceWithoOrWithout, totalShipment } = req.body
+    const { payment, addressId, discountPrice:discountPriceWithoOrWithout,couponCode, totalShipment } = req.body
    
     const userId = req.user.user._id;
     const cart = await Cart.findOne({ userId: userId }).populate('products.productId')
@@ -183,6 +184,7 @@ const placeOrderOnlinePayment = async (req,res,next) =>{
           totalShipment:discountPriceWithoOrWithout,
           paymentMethod: payment,
           appliedCouponValue:difference,
+          couponCode:couponCode,
           products: productDetails.map((item) => {
             return {
               salePrice: item.salePrice,
@@ -399,10 +401,10 @@ const orderDetailedView = async(req,res,next) =>{
  }
 
  const individualOrder = async (req, res, next) => {
-  const { individualOrderId, orderId, reason, productId, quantity, couponCode } = req.body;
-  const userId = req.user.user._id;
-
-  try {
+   
+   try {
+    const { individualOrderId, orderId, reason, productId, quantity, couponCode } = req.body;
+    const userId = req.user.user._id;
     const order = await Order.findById(orderId);
     if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
 
@@ -432,15 +434,15 @@ const orderDetailedView = async(req,res,next) =>{
     if (couponCode && couponCode.trim() !== "") {
       coupon = await Coupon.findOne({ code: couponCode });
     }
-
-    if (coupon) {
+       
+    if (coupon && order.paymentStatus.toLowerCase() === "pending") {
       if (coupon.discountType === 'fixedAmount') {
         totalBeforeCoupon = originalShipment - total + coupon.discountAmtOrPercentage;
       } else if (coupon.discountType === 'percentage') {
          let beforeTotal = originalShipment - total 
         const percentageAmount =  beforeTotal * coupon.discountAmtOrPercentage / 100
-         const max = Math.max(percentageAmount , coupon.maxRedeemableAmt)
-        totalBeforeCoupon = originalShipment - total + max 
+         const min = Math.min(percentageAmount , coupon.maxRedeemableAmt)
+        totalBeforeCoupon = originalShipment - total + min
        
       }
 
@@ -454,9 +456,49 @@ const orderDetailedView = async(req,res,next) =>{
         order.appliedCouponValue = 0;
         order.totalShipment = totalBeforeCoupon;
       }
-    } else {
+    } else if (coupon && order.paymentStatus.toLowerCase() === 'success') {
+     
+       const couponId = coupon?._id
+       const wallet = new Wallet({ userId,productId, orderId,couponId, amount: 0 });
+       const walletBalance = new WalletBalance({userId,amount:0})
+
+
+      let refundAmount = canceledProduct.total - order.appliedCouponValue;
+      wallet.status = true
+      wallet.amount = refundAmount 
+      walletBalance.amount+=refundAmount
+      order.appliedCouponValue = 0
+      await walletBalance.save()
+      await wallet.save();
+    } else if (order.paymentStatus.toLowerCase() === 'success') {
+      let wallet = await Wallet.findOne({ userId });
+      let walletBalance = await WalletBalance.findOne({userId})
+      if (!wallet) {
+        const couponId = coupon._id
+        wallet = new Wallet({ userId,productId,orderId,couponId, amount: 0 });
+        walletBalance = new WalletBalance({userId})
+      }
+
+      // Deduct applied coupon value only for the cancelled item
+      let refundAmount = canceledProduct.total ;
+      if (order.appliedCouponValue && order.appliedCouponValue > 0) {
+        refundAmount -= order.appliedCouponValue;
+        order.appliedCouponValue = 0;
+
+        await order.save();
+      }
+      walletBalance.amount += refundAmount
+      wallet.amount = refundAmount;
+      await walletBalance.save()
+      await wallet.save();
+    }
+    
+    else {
       order.totalShipment = originalShipment - total;
     }
+    const productArraylength =  order.products.length
+    const result = order.products.filter((item)=>item.cancelStatus === true).length       
+    if(productArraylength === result) order.orderStatus = "Cancelled"
 
     await order.save();
 
@@ -467,28 +509,11 @@ const orderDetailedView = async(req,res,next) =>{
       await product.save();
     }
 
-    // Refund logic (for successful payment)
-    if (order.paymentStatus === 'success') {
-      let wallet = await Wallet.findOne({ userId });
-      if (!wallet) {
-        wallet = new Wallet({ userId, amount: 0 });
-      }
-
-      // Deduct applied coupon value only for the cancelled item
-      let refundAmount = canceledProduct.total;
-      if (order.appliedCouponValue && order.appliedCouponValue > 0) {
-        refundAmount -= order.appliedCouponValue;
-        order.appliedCouponValue = 0;
-        await order.save();
-      }
-
-      wallet.amount += refundAmount;
-      await wallet.save();
-    }
-
+    
     return res.status(200).json({ success: true });
 
   } catch (err) {
+    console.error(err)
     next(err);
   }
 };

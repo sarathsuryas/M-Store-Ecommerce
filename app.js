@@ -13,7 +13,6 @@ const bodyParser = require('body-parser')
 
 var adminRouter = require('./routes/admin');
 var usersRouter = require('./routes/users');
-const { log } = require('console');
 
 
 var app = express();

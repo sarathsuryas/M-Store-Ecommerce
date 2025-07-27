@@ -15,6 +15,7 @@ var randtoken = require('rand-token');
 const Coupon = require('../model/couponSchema');
 const Wallet = require('../model/walletSchema');
 const { resetPasswordSubmit } = require('./userPasswordReset');
+const WalletBalance = require('../model/walletBalanceShema');
 //function to generate a random OTP
 
 
@@ -368,7 +369,11 @@ const userProfile = async (req, res,next) => {
     const loggedIn = req.user.user ? true : false;
 
     const user = await User.findById(userId)
-    const wallet = await Wallet.findOne({userId:userId})
+    const walletBalance = await WalletBalance.findOne({userId:userId})
+    const wallet = await Wallet.find({userId:userId})
+                                          .populate({ path: 'couponId', strictPopulate: false })
+                                          .populate('orderId')
+                                          .populate({ path: 'productId', strictPopulate: false })
     const orders = await Order.find({userId:userId}).sort({createdAt:-1})
     const address = await Address.findOne({userId:userId})
     
@@ -377,7 +382,7 @@ const userProfile = async (req, res,next) => {
     const phoneNumber = user.mobile
     const mobile = (!phoneNumber) ? '' : phoneNumber
  
-    return res.render('USER/userProfile', { mobile, user, orders , adrs ,wallet ,loggedIn})
+    return res.render('USER/userProfile', { mobile, user, orders , adrs ,wallet ,loggedIn,walletBalance})
   } catch (error) {
     next(error)
   }
