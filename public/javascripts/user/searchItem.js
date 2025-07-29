@@ -1,7 +1,6 @@
 async function showDropdown() {
   const input = document.getElementById('searchInput').value;
   const dropdown = document.getElementById('autocompleteDropdown');
-
   // Clear previous results
   dropdown.innerHTML = '';
 

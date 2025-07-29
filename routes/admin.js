@@ -7,7 +7,8 @@ const categoryMangement = require('../Controller/adminCategoryManagement')
 const orderManagement = require('../Controller/adminOrderManagement')
 const couponManagement = require('../Controller/adminCouonManagement')
 const verifyAdmin = require('../middleware/admin/adminJwt')
-const adminLoggedIn = require('../middleware/admin/adminLoggedIn')
+const adminLoggedIn = require('../middleware/admin/adminLoggedIn');
+const salesReport = require('../Controller/salesReport');
 // const adminsignin = router.get('/signin',admincontroller.adminsignin)
 
 // const signupsub = router.post('/signupsub',admincontroller.signupsub)
@@ -56,5 +57,7 @@ router.put('/edit-coupon',couponManagement.editCoupon)
 router.get('/sales-report-daily',admincontroller.salesReportDaily)
 router.get('/sales-report-weekly',admincontroller.salesReportWeekly)
 router.get('/sales-report-monthly',admincontroller.salesReportMonthly)
+router.post('/generate-pdf',salesReport)
+
 
 module.exports = router;

@@ -270,7 +270,6 @@ await cart.save()
      const { payment, addressId, discountPrice:discountPriceWithoOrWithout , couponCode , totalShipment } = req.body
      const userId = req.user.user._id;
      const difference =  totalShipment - discountPriceWithoOrWithout
-     console.log(discountPriceWithoOrWithout,'//////////////////////////////////////////////');
      const cart = await Cart.findOne({ userId: userId }).populate('products.productId')
      const cartQuantity = cart.products.map((item)=>{
        return item.quantity
@@ -279,6 +278,7 @@ await cart.save()
         return item.productId.stock
        })
   
+
  
   for(let i=0;i<cartQuantity.length;i++){
    if(cartQuantity[i]>stock[i]){
@@ -288,17 +288,17 @@ await cart.save()
     return res.status(205).json({succes:true,title:title})
    }
  }
- 
-     const wallet = await Wallet.findOne({userId:userId})
-      if(!wallet||wallet.amount===0){
+     const walletBalance = await WalletBalance.findOne({userId:userId})
+    
+      if(!walletBalance||walletBalance.amount===0){
        return res.status(206).json({success:true})
       }
       // fix bug here
       console.log(discountPriceWithoOrWithout)
       console.log(totalShipment);
-      if(wallet.amount>=discountPriceWithoOrWithout){
-       wallet.amount -= discountPriceWithoOrWithout
-       await wallet.save()
+      if(walletBalance.amount>=discountPriceWithoOrWithout){
+       walletBalance.amount -= discountPriceWithoOrWithout
+       await walletBalance.save()
       
  
      if(couponCode){
@@ -316,9 +316,7 @@ await cart.save()
      })
  
      const [{ name, mobile, homeAddress, pinCode, locality, city, state, altPhone }] = selectedAddress
-     // const totalAmount = cart.cartTotal
-     //const order = await Order.create({})
-     // console.log(name, mobile, homeAddress, pinCode, locality, city, state, altPhone)
+    
      const addressData = {
        name: name,
        mobile, mobile,
@@ -352,7 +350,8 @@ await cart.save()
        address: addressData,
        totalShipment:discountPriceWithoOrWithout,
        appliedCouponValue:difference,
-       paymentStatus:"success"
+       paymentStatus:"success",
+       couponCode:couponCode
      })
  
      
@@ -457,8 +456,8 @@ const orderDetailedView = async(req,res,next) =>{
         order.totalShipment = totalBeforeCoupon;
       }
     } else if (coupon && order.paymentStatus.toLowerCase() === 'success') {
-     
        const couponId = coupon?._id
+       
        const wallet = new Wallet({ userId,productId, orderId,couponId, amount: 0 });
        const walletBalance = new WalletBalance({userId,amount:0})
 
@@ -471,26 +470,19 @@ const orderDetailedView = async(req,res,next) =>{
       await walletBalance.save()
       await wallet.save();
     } else if (order.paymentStatus.toLowerCase() === 'success') {
-      let wallet = await Wallet.findOne({ userId });
-      let walletBalance = await WalletBalance.findOne({userId})
-      if (!wallet) {
-        const couponId = coupon._id
-        wallet = new Wallet({ userId,productId,orderId,couponId, amount: 0 });
-        walletBalance = new WalletBalance({userId})
-      }
+       console.log(req.body,'/////////////////////')
+       const wallet = new Wallet({ userId,productId, orderId, amount: 0 });
+       const walletBalance = new WalletBalance({userId,amount:0})
 
-      // Deduct applied coupon value only for the cancelled item
-      let refundAmount = canceledProduct.total ;
-      if (order.appliedCouponValue && order.appliedCouponValue > 0) {
-        refundAmount -= order.appliedCouponValue;
-        order.appliedCouponValue = 0;
 
-        await order.save();
-      }
-      walletBalance.amount += refundAmount
-      wallet.amount = refundAmount;
+      let refundAmount = canceledProduct.total - order.appliedCouponValue;
+      wallet.status = true
+      wallet.amount = refundAmount 
+      walletBalance.amount+=refundAmount
+      order.appliedCouponValue = 0
       await walletBalance.save()
       await wallet.save();
+
     }
     
     else {

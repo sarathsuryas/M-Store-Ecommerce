@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('../ADMIN/ADMINPARTIAL/header') %>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>M Store - Daily Sales Report</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+<%- include('../ADMIN/ADMINPARTIAL/middle') %>
+<main class="main-wrap">
 
     <style>
         body {
@@ -41,9 +36,7 @@
         }
     </style>
     
-</head>
 
-<body>
     <div class="container">
         <h1 class="mt-4 mb-4">M Store</h1>
         <h2 class="mb-4">Daily Sales Report</h2>
@@ -104,12 +97,35 @@
         </table>
     </div>
     <!-- print in pdf -->
-    <script>
-     const printInPdf = document.getElementById('printInPdf')
-     printInPdf.addEventListener("click" , function(){
-        window.print()
-     })
-    </script>
+  <script>
+  const printInPdf = document.getElementById('printInPdf');
+        const sales = JSON.parse('<%- jsonString %>')
+
+  printInPdf.addEventListener("click", function () {
+    fetch('/admin/generate-pdf', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ sales })
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('PDF generation failed');
+      return res.blob();
+    })
+    .then(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'sales_report.pdf';
+      link.click();
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Failed to generate PDF');
+    });
+  });
+</script>
     <!-- print in excel -->
     
     
@@ -130,8 +146,8 @@
         });
     </script>
     
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
 
-</html>
+</main>
+
+        <%- include('../ADMIN/ADMINPARTIAL/footer') %>
