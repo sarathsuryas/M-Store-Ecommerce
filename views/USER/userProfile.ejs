@@ -165,9 +165,11 @@
                                                                                 <%= item.orderStatus %>
                                                                             </td>
                                                                             <td>
-                                                                                <%= item.orderStatus==='Cancelled' ?
+                                                                                <!-- <%= item.orderStatus==='Cancelled' ?
                                                                                     value - 40 : value -
-                                                                                    item.appliedCouponValue %>
+                                                                                    item.appliedCouponValue %> -->
+                                                                                <%= item.totalAmount + 40 %>
+                                                                                    <!-- <% console.log("This will print on the server console",item); %>      -->
                                                                             </td>
 
                                                                             <td><a href="/order-detailed-view/<%= item.id %>"
@@ -315,24 +317,21 @@
                                                     <form name="enq">
                                                         <div class="row">
                                                             <div class="form-group col-md-12">
-                                                                <label for="username">User Name <span
-                                                                        class="required">*</span></label>
-                                                                <input required="" class="form-control" name="name"
+                                                                <label for="username">User Name <span class="required">*</span></label>
+                                                                <input required class="form-control" name="name"
                                                                     type="text" value="<%= user.username %>"
                                                                     id="userName">
                                                                 <span style="color: red;" id="userNameError"></span>
                                                             </div>
                                                             <div class="form-group col-md-12">
-                                                                <label for="Email">Email Address <span
-                                                                        class="required">*</span></label>
-                                                                <input required="" class="form-control" name="email"
-                                                                    type="email" value="<%= user.email %>" id="Email">
+                                                                <label for="Email">Email Address <span class="required">*</span></label>
+                                                                <input required class="form-control" name="email"
+                                                                    type="email" value="<%= user.email %>" id="Email" readonly>
                                                                 <span style="color: red;" id="EmailError"></span>
                                                             </div>
                                                             <div class="form-group col-md-12">
-                                                                <label for="phone">Phone No <span
-                                                                        class="required">*</span></label>
-                                                                <input required="" class="form-control" name="phone"
+                                                                <label for="phone">Phone No <span class="required">*</span></label>
+                                                                <input required class="form-control" name="phone"
                                                                     type="text" value="<%= mobile %>" id="Phone">
                                                                 <span style="color: red;" id="PhoneError"></span>
                                                             </div>

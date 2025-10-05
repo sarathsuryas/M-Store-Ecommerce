@@ -57,7 +57,7 @@ const signupsub = async (req, res,next) => {
   
   
   
-    const data = await User.findOne({ email: email });
+const data = await User.findOne({ email: { $regex: `^${email}$`, $options: 'i' } });
     if (data) {
       req.session.signup = 'Email already Exists please login'
       return res.redirect('/signup')
@@ -183,8 +183,7 @@ const loginsub = async (req, res, next) => {
   try {
     const { email, password: enteredPassword } = req.body;
 
-    const userData = await User.findOne({ email: email })
-
+const userData = await User.findOne({ email: { $regex: `^${email}$`, $options: 'i' } });
     if (!userData) {
       req.session.notFound = 'User data not found Please Sign up'
       return res.redirect('/get-login')
@@ -196,6 +195,11 @@ const loginsub = async (req, res, next) => {
     const { password, _id, username } = userData;
     // Use bcrypt.compare with async/await for cleaner code
     const passwordMatch = await bcrypt.compare(enteredPassword, password);
+    if(!passwordMatch){ 
+      req.session.notFound = 'paqssword is incorrect'
+      return res.redirect('/get-login')
+    }
+    
 
     if (passwordMatch) {
       const user = {

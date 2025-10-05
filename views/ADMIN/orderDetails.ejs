@@ -263,8 +263,10 @@
                                                                 <dl class="dlist">
                                                                     <dt>Grand total:</dt>
 
-                                                                    <dd> <b class="h5">₹ <%= value ? value + 40 -
+                                                                    <!-- <dd> <b class="h5">₹ <%= value ? value + 40 -
                                                                                 order.appliedCouponValue : 0 %>
+                                                                        </b> -->
+                                                                        <b class="h5">₹ <%= order.totalAmount + 40 %>
                                                                         </b>
                                                                     </dd>
                                                                 </dl>

@@ -64,3 +64,58 @@ document.addEventListener('click', function (event) {
     dropdown.style.display = 'none';
   }
 });
+
+
+async function showDropdownMobile() {
+  const input = document.getElementById('searchInputMobile').value;
+  const dropdown = document.getElementById('autocompleteDropdownMobile');
+  dropdown.innerHTML = '';
+
+  try {
+    const response = await fetch('/search-product', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ input }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const filteredItems = data.products;
+
+    filteredItems.forEach(item => {
+      const itemElement = document.createElement('div');
+      itemElement.classList.add('autocomplete-dropdown-item');
+      itemElement.textContent = item.title;
+
+      itemElement.addEventListener('click', async () => {
+        const searchName = document.getElementById('searchInputMobile').value = item.title;
+        dropdown.innerHTML = '';
+        const response = await fetch('/search-input', {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json"
+          },
+          body: JSON.stringify({ searchName })
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const productId = data.productId;
+          window.location.href = `/search-result?id=${productId}`;
+        }
+      });
+
+      dropdown.appendChild(itemElement);
+    });
+
+    dropdown.style.display = filteredItems.length > 0 ? 'block' : 'none';
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+

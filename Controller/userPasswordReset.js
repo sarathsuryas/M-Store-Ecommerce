@@ -11,7 +11,7 @@ const forgotPassword = async (req,res,next) =>{
     const {email} = req.body
     
     
-    const user = await User.findOne({email:email})
+    const user = await User.findOne({ email: { $regex: `^${email}$`, $options: 'i' } });
     
     if(!user){
       return res.status(404).json({success:false})

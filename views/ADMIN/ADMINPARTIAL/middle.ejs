@@ -58,3 +58,20 @@
             <br>
         </nav>
     </aside>
+   <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const currentPath = window.location.pathname; 
+    const menuItems = document.querySelectorAll(".menu-item");
+
+    menuItems.forEach(item => {
+      const link = item.querySelector("a");
+      if (link && link.getAttribute("href") === currentPath) {
+        item.classList.add("active");
+      } else {
+        item.classList.remove("active");
+      }
+    });
+  });
+</script>
+
+

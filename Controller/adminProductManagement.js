@@ -125,38 +125,60 @@ const productPublish = async(req,res,next) =>{
   }
 
   const editedProduct = async (req, res, next) => {
-    const { id, title, description, price, category, stock, discount } = req.body;
-     try{
-  
-      const product = await Product.findById(id)
-      product.title=title
-      product.description=description
-      product.price=price
-      product.category=category
-      product.stock=stock
-      product.discount=discount
-     
-      //check if the coverImage in the req.files
-       if(req.files.coverImage){
-        product.coverImage = req.files.coverImage[0].path.replace(/\\/g, '/').replace('public/', '/');
-       }
-       //check if the produuctImages in the req.files
-       if(product.productImages.length<3){
-     if(req.files.productImages){
-       product.productImages.push(... req.files.productImages.map(file => file.path.replace(/\\/g, '/').replace('public/', '/'))) 
-     }
+  const { id, title, description, price, category, stock, discount } = req.body;
+
+  try {
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).send('Product not found');
     }
-     
-     await product.save()
-     
-     if(product){
-      return res.redirect('/admin/productmanagement')
-     }
-  
-     }catch(err){
-      next(err); // Pass the error to the next middleware
-     }
-  };
+
+    // Update basic fields
+    product.title = title;
+    product.description = description;
+    product.price = price;
+    product.category = category;
+    product.stock = stock;
+    product.discount = discount;
+
+    // Update coverImage if new file is uploaded
+    if (req.files && req.files.coverImage && req.files.coverImage.length > 0) {
+      product.coverImage = req.files.coverImage[0].path
+        .replace(/\\/g, '/')
+        .replace('public/', '/');
+    }
+
+    // Update productImages individually
+    // Loop through existing productImages and check if replacement was uploaded
+    if (req.files && req.files.productImages) {
+      const uploadedImages = req.files.productImages.map(file =>
+        file.path.replace(/\\/g, '/').replace('public/', '/')
+      );
+
+      // Replace images in order of upload if corresponding input exists
+      // Example: first uploaded image replaces first image that has an empty file input
+      for (let i = 0; i < uploadedImages.length; i++) {
+        if (product.productImages[i]) {
+          product.productImages[i] = uploadedImages[i];
+        } else if (product.productImages.length < 3) {
+          product.productImages.push(uploadedImages[i]);
+        }
+      }
+    }
+
+    // Ensure maximum 3 product images
+    if (product.productImages.length > 3) {
+      product.productImages = product.productImages.slice(0, 3);
+    }
+
+    await product.save();
+
+    return res.redirect('/admin/productmanagement');
+  } catch (err) {
+    next(err);
+  }
+};
+
 
   const deleteImage =  async (req,res,next) =>{
     try {
