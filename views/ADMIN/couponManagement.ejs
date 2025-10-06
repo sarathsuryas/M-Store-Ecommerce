@@ -90,7 +90,11 @@
                                  <td>  ₹ <%= item.discountAmtOrPercentage %> </td>
                                               <% } %>
                                     <td><%= item.minOrderAmount %></td>
+                                     <% if(item.maxRedeemableAmt) { %>
                                     <td><%= item.maxRedeemableAmt %></td>
+                                             <% } else  { %>
+                                          <td><%= item.discountAmtOrPercentage %></td>
+                                                 <% } %>
                                     <td><%= item.expirationDate.toLocaleString() %></td>
                                     <% if(item.isActive === "Active") { %>
                                     <td><span class="badge rounded-pill alert-primary">Active</span></td>

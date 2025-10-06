@@ -19,50 +19,51 @@ router.get('/adminhome', verifyAdmin, admincontroller.adminhome)
 router.get('/logOut', admincontroller.logOut)
 
 // user management
-router.get('/userslist', admincontroller.userslist)
-router.put('/block/:userId', admincontroller.blockuser)
-router.put('/unblock/:userId', admincontroller.unblockuser)
+router.get('/userslist',verifyAdmin, admincontroller.userslist)
+router.put('/block/:userId',verifyAdmin, admincontroller.blockuser)
+router.put('/unblock/:userId',verifyAdmin, admincontroller.unblockuser)
 
 
 // cateegory management
-router.get('/productcategories', categoryMangement.productcategories)
-router.post('/addcat', categoryMangement.addcat)
-router.put('/publish/:id', categoryMangement.publish)
-router.get('/updatecat/:id', categoryMangement.updateCat)
-router.post('/updatedcat', categoryMangement.updatedCat)
+router.get('/productcategories',verifyAdmin, categoryMangement.productcategories)
+router.post('/addcat',verifyAdmin, categoryMangement.addcat)
+router.put('/publish/:id',verifyAdmin, categoryMangement.publish)
+router.get('/updatecat/:id',verifyAdmin, categoryMangement.updateCat)
+router.post('/updatedcat', verifyAdmin,categoryMangement.updatedCat)
 
 // product management
-router.get('/productmanagement', productManagement.productManagement)
-router.get('/add-product', productManagement.addProduct)
-router.post('/insert-product', multer.fields([{ name: 'coverImage', maxCount: 1 }, { name: 'productImages', maxCount: 4 }]), productManagement.insertProduct)
-router.put('/productpublish/:id', productManagement.productPublish)
-router.get('/editproduct/:id', productManagement.editProduct)
+router.get('/productmanagement', verifyAdmin, productManagement.productManagement)
+router.get('/add-product', verifyAdmin, productManagement.addProduct)
+router.post('/insert-product', verifyAdmin, multer.fields([{ name: 'coverImage', maxCount: 1 }, { name: 'productImages', maxCount: 4 }]), productManagement.insertProduct)
+router.put('/productpublish/:id',verifyAdmin, productManagement.productPublish)
+router.get('/editproduct/:id', verifyAdmin, productManagement.editProduct)
 router.post(
     '/editedproduct',
+    verifyAdmin,
     multer.any(),  // accept any fields, we'll handle mapping manually
     productManagement.editedProduct
 );
 
-router.put('/delete-image', productManagement.deleteImage)
+router.put('/delete-image',verifyAdmin, productManagement.deleteImage)
 
 // order management
-router.get('/order-list', orderManagement.orderList)
-router.get('/order-details/:id', orderManagement.orderDetails)
-router.put('/update-order-status', orderManagement.updateOrderStatus)
+router.get('/order-list',verifyAdmin, orderManagement.orderList)
+router.get('/order-details/:id',verifyAdmin, orderManagement.orderDetails)
+router.put('/update-order-status',verifyAdmin, orderManagement.updateOrderStatus)
 
 //coupon management
-router.get('/coupon-management', couponManagement.couponManagement)
-router.get('/add-coupon', couponManagement.addCoupon)
-router.post('/insert-coupon', couponManagement.insertCoupon)
+router.get('/coupon-management',verifyAdmin, couponManagement.couponManagement)
+router.get('/add-coupon', verifyAdmin,couponManagement.addCoupon)
+router.post('/insert-coupon', verifyAdmin,couponManagement.insertCoupon)
 router.put('/coupon-status-update', couponManagement.couponStatus)
-router.get('/edit-coupon-page/:id', couponManagement.editCouponPage)
-router.put('/edit-coupon', couponManagement.editCoupon)
+router.get('/edit-coupon-page/:id',verifyAdmin, couponManagement.editCouponPage)
+router.put('/edit-coupon',verifyAdmin, couponManagement.editCoupon)
 
 // sales Report
-router.get('/sales-report-daily', admincontroller.salesReportDaily)
-router.get('/sales-report-weekly', admincontroller.salesReportWeekly)
-router.get('/sales-report-monthly', admincontroller.salesReportMonthly)
-router.post('/generate-pdf', salesReport)
+router.get('/sales-report-daily',verifyAdmin, admincontroller.salesReportDaily)
+router.get('/sales-report-weekly',verifyAdmin, admincontroller.salesReportWeekly)
+router.get('/sales-report-monthly', verifyAdmin,admincontroller.salesReportMonthly)
+router.post('/generate-pdf',verifyAdmin, salesReport)
 
 
 module.exports = router;

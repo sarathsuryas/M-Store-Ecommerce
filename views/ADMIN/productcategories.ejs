@@ -215,6 +215,7 @@
                         .catch((error) => {
                             console.log(error);
                             alert('There is an error')
+                            window.location.href = '/admin'
                         })
                 } catch (error) {
                     console.error('Error updating block status:', error)
@@ -244,12 +245,14 @@
                                 })
                                 window.location.reload()
                             } else {
+                              
                                 alert(data.message)
                             }
                         })
                         .catch((error) => {
                             console.log(error);
                             alert('There is an error')
+                              window.location.href = '/admin'
                         })
                 } catch (error) {
                     console.error('Error updating block status:', error)
