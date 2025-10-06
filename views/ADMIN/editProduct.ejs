@@ -10,72 +10,25 @@
         <main class="main-wrap">
             <header class="main-header navbar">
                 <div class="col-search">
-                    <form class="searchform">
-                        <div class="input-group">
-                            <input list="search_terms" type="text" class="form-control" placeholder="Search term">
-                            <button class="btn btn-light bg" type="button"> <i
-                                    class="material-icons md-search"></i></button>
-                        </div>
-                        <datalist id="search_terms">
-                            <option value="Products">
-                            <option value="New orders">
-                            <option value="Apple iphone">
-                            <option value="Ahmed Hassan">
-                        </datalist>
-                    </form>
+
                 </div>
                 <div class="col-nav">
                     <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i
                             class="material-icons md-apps"></i> </button>
                     <ul class="nav">
+
                         <li class="nav-item">
-                            <a class="nav-link btn-icon" href="#">
-                                <i class="material-icons md-notifications animation-shake"></i>
-                                <span class="badge rounded-pill">3</span>
-                            </a>
+                            <a class="nav-link btn-icon darkmode"> <i class="material-icons md-nights_stay"></i> </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link btn-icon darkmode" href="#"> <i
-                                    class="material-icons md-nights_stay"></i> </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="requestfullscreen nav-link btn-icon"><i
-                                    class="material-icons md-cast"></i></a>
-                        </li>
+
+
                         <li class="dropdown nav-item">
-                            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage"
-                                aria-expanded="false"><i class="material-icons md-public"></i></a>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
-                                <a class="dropdown-item text-brand" href="#"><img
-                                        src="adminassets/imgs/theme/flag-us.png" alt="English">English</a>
-                                <a class="dropdown-item" href="#"><img src="adminassets/imgs/theme/flag-fr.png"
-                                        alt="Français">Français</a>
-                                <a class="dropdown-item" href="#"><img src="adminassets/imgs/theme/flag-jp.png"
-                                        alt="Français">日本語</a>
-                                <a class="dropdown-item" href="#"><img src="adminassets/imgs/theme/flag-cn.png"
-                                        alt="Français">中国人</a>
-                            </div>
-                        </li>
-                        <li class="dropdown nav-item">
-                            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
-                                aria-expanded="false"> <img class="img-xs rounded-circle"
-                                    src="adminassets/imgs/people/avatar2.jpg" alt="User"></a>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                                <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit
-                                    Profile</a>
-                                <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account
-                                    Settings</a>
-                                <a class="dropdown-item" href="#"><i
-                                        class="material-icons md-account_balance_wallet"></i>Wallet</a>
-                                <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
-                                <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help
-                                    center</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item text-danger" href="#"><i
-                                        class="material-icons md-exit_to_app"></i>Logout</a>
-                            </div>
-                        </li>
-                    </ul>
+
+                            <a class="dropdown-item text-danger" href="/admin/logOut"><i
+                                    class="material-icons md-exit_to_app"></i>Logout</a>
+                </div>
+                </li>
+                </ul>
                 </div>
             </header>
             <section class="content-main">
@@ -173,15 +126,17 @@
                                     <div style="display:flex; gap:15px; flex-wrap: wrap;">
                                         <% products.productImages.forEach((image, index)=> { %>
                                             <div style="position: relative; text-align:center;">
-                                                <!-- Show current image -->
+                                                <!-- Current image -->
                                                 <img src="<%= image %>" width="90" height="90"
-                                                    style="border:1px solid #ccc; border-radius:5px; display:block; margin-bottom:5px;">
+                                                    style="border:1px solid #ccc; border-radius:5px; margin-bottom:5px;"
+                                                    id="preview_existing_<%= index %>">
 
-                                                <!-- Optional replacement -->
-                                                <input type="file" name="productImages" style="margin-bottom:5px;">
+                                                <!-- File input for replacing this slot -->
+                                                <input type="file" name="newProductImages[<%= index %>]"
+                                                    onchange="showPreview(event, 'preview_existing_<%= index %>')">
 
-                                                <!-- Hidden input to keep previous image -->
-                                                <input type="hidden" name="existingProductImages[]"
+                                                <!-- Hidden field to keep old image if no new one uploaded -->
+                                                <input type="hidden" name="existingProductImages[<%= index %>]"
                                                     value="<%= image %>">
                                             </div>
                                             <% }) %>
@@ -190,13 +145,17 @@
                                     <% if (products.productImages.length < 3) { %>
                                         <p>You can add <%= 3 - products.productImages.length %> more image(s)</p>
                                         <% for (let i=products.productImages.length; i < 3; i++) { %>
-                                            <input type="file" name="productImages" style="margin-bottom:5px;">
+                                            <div style="margin-bottom:10px;">
+                                                <img id="preview_new_<%= i %>" width="90" height="90"
+                                                    style="border:1px solid #ccc; border-radius:5px; display:none; margin-bottom:5px;">
+                                                <input type="file" name="newProductImages[<%= i %>]"
+                                                    onchange="showPreview(event, 'preview_new_<%= i %>')">
+                                            </div>
                                             <% } %>
-                                                <% } else { %>
-                                                    <div style="color:red;">Update Every Image
-                                                    </div>
-                                                    <% } %>
+                                                <% } %>
                                 </div>
+
+
 
 
 
@@ -226,6 +185,20 @@
                 </div>
             </footer>
         </main>
+        <script>
+            function showPreview(event, previewId) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const img = document.getElementById(previewId);
+                        img.src = e.target.result;
+                        img.style.display = "block"; // show hidden preview
+                    }
+                    reader.readAsDataURL(file);
+                }
+            }
+        </script>
 
         <script>
             function validateForm() {

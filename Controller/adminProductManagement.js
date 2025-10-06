@@ -125,7 +125,7 @@ const productPublish = async(req,res,next) =>{
   }
 
   const editedProduct = async (req, res, next) => {
-  const { id, title, description, price, category, stock, discount } = req.body;
+  const { id, title, description, price, category, stock, discount, existingProductImages } = req.body;
 
   try {
     const product = await Product.findById(id);
@@ -141,35 +141,29 @@ const productPublish = async(req,res,next) =>{
     product.stock = stock;
     product.discount = discount;
 
-    // Update coverImage if new file is uploaded
-    if (req.files && req.files.coverImage && req.files.coverImage.length > 0) {
-      product.coverImage = req.files.coverImage[0].path
-        .replace(/\\/g, '/')
-        .replace('public/', '/');
+    // Update cover image if uploaded
+    const coverFile = req.files.find(f => f.fieldname === 'coverImage');
+    if (coverFile) {
+      product.coverImage = coverFile.path.replace(/\\/g, '/').replace('public/', '/');
     }
 
-    // Update productImages individually
-    // Loop through existing productImages and check if replacement was uploaded
-    if (req.files && req.files.productImages) {
-      const uploadedImages = req.files.productImages.map(file =>
-        file.path.replace(/\\/g, '/').replace('public/', '/')
-      );
+    // Handle product images (slot-based update)
+    let updatedImages = [];
 
-      // Replace images in order of upload if corresponding input exists
-      // Example: first uploaded image replaces first image that has an empty file input
-      for (let i = 0; i < uploadedImages.length; i++) {
-        if (product.productImages[i]) {
-          product.productImages[i] = uploadedImages[i];
-        } else if (product.productImages.length < 3) {
-          product.productImages.push(uploadedImages[i]);
-        }
+    for (let i = 0; i < 3; i++) {
+      const newFile = req.files.find(f => f.fieldname === `newProductImages[${i}]`);
+
+      if (newFile) {
+        // Replace with uploaded file
+        updatedImages[i] = newFile.path.replace(/\\/g, '/').replace('public/', '/');
+      } else if (existingProductImages && existingProductImages[i]) {
+        // Keep old image if no new file
+        updatedImages[i] = existingProductImages[i];
       }
     }
 
-    // Ensure maximum 3 product images
-    if (product.productImages.length > 3) {
-      product.productImages = product.productImages.slice(0, 3);
-    }
+    // Assign updated images back to product
+    product.productImages = updatedImages.filter(Boolean);
 
     await product.save();
 
