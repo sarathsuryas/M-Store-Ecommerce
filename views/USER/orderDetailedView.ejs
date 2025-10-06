@@ -134,13 +134,20 @@
                       <%= item.quantity %>
                     </td>
                     <td>
-                      <% if(order.orderStatus==="Delivered" ) { %>
+                      <% if(order.orderStatus==="Delivered") { %>
                         <button class="btn btn-return btn-sm">Return</button>
                         <% } else if(item.cancelStatus===false) { %>
-                          <button class="btn btn-cancel btn-sm"
+                          <!-- <button class="btn btn-cancel btn-sm"
                             onclick="cancelIndividualOrder('<%= item._id %>','<%= order.id %>','<%= item.productId._id %>','<%= item.quantity %>','<%= order.couponCode %>')">
                             Cancel
+                          </button> -->
+                          <button class="btn btn-cancel btn-sm"
+                            onclick="cancelIndividualOrder('<%= item._id %>', '<%= order.id %>', '<%= item.productId._id %>', '<%= item.quantity %>', '<%= order.couponCode %>')"
+                            <%=order.paymentStatus==='Failed' ? 'disabled' : '' %>>
+                            Cancel
                           </button>
+
+
                           <% } else { %>
                             <span class="badge bg-danger">Cancelled</span>
                             <% } %>
