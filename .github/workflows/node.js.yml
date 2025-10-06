@@ -1,18 +1,15 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
 name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ]   # Runs on push to main
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main" ]   # Runs on PR to main
 
 jobs:
   build:
+    runs-on: self-hosted   # You’re using your own server runner
 
-    runs-on: self-hosted
     env: 
         PORT: ${{ secrets.PORT }}
         MONGODB_URI: ${{ secrets.MONGODB_URI }}
@@ -20,19 +17,37 @@ jobs:
         password: ${{ secrets.password }}
         ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
         razorpay_key_id: ${{ secrets.razorpay_key_id }}
-        razorpay_key_secret:  ${{ secrets.razorpay_key_secret }}
+        razorpay_key_secret: ${{ secrets.razorpay_key_secret }}
+
     strategy:
       matrix:
-        node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        node-version: [18.x] # Testing/Building with Node.js 18
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4   # Pulls latest code from repo
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
+
+    - run: npm ci   # Clean install dependencies
+
+    - name: Set up environment variables
+      run: | 
+           echo "PORT=${{ env.PORT }}" >> .env
+           echo "MONGODB_URI=${{ env.MONGODB_URI }}" >> .env
+           echo "email=${{ env.email }}" >> .env
+           echo "password=${{ env.password }}" >> .env
+           echo "ACCESS_TOKEN_SECRET=${{ env.ACCESS_TOKEN_SECRET }}" >> .env
+           echo "razorpay_key_id=${{ env.razorpay_key_id }}" >> .env
+           echo "razorpay_key_secret=${{ env.razorpay_key_secret }}" >> .env
+
+    - name: Verify Environment Variables
+      run: node verify-env.js
+    - name: Build Project
+      run: npm run build   # (if you have a build step, like Next.js/React/Vue)
+
     - name: Start Application
       run: pm2 restart app
