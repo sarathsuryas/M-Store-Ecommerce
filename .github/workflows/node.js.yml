@@ -13,11 +13,11 @@ jobs:
     env: 
         PORT: ${{ secrets.PORT }}
         MONGODB_URI: ${{ secrets.MONGODB_URI }}
-        email: ${{ secrets.email }}
-        password: ${{ secrets.password }}
+        email: ${{ secrets.EMAIL }}
+        password: ${{ secrets.PASSWORD }}
         ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
-        razorpay_key_id: ${{ secrets.razorpay_key_id }}
-        razorpay_key_secret: ${{ secrets.razorpay_key_secret }}
+        razorpay_key_id: ${{ secrets.RAZORPAY_KEY_ID }}
+        razorpay_key_secret: ${{ secrets.RAZORPAY_KEY_SECRET }}
 
     strategy:
       matrix:
@@ -38,16 +38,16 @@ jobs:
       run: | 
            echo "PORT=${{ env.PORT }}" >> .env
            echo "MONGODB_URI=${{ env.MONGODB_URI }}" >> .env
-           echo "email=${{ env.email }}" >> .env
-           echo "password=${{ env.password }}" >> .env
+           echo "email=${{ env.EMAIL }}" >> .env
+           echo "password=${{ env.PASSWORD }}" >> .env
            echo "ACCESS_TOKEN_SECRET=${{ env.ACCESS_TOKEN_SECRET }}" >> .env
-           echo "razorpay_key_id=${{ env.razorpay_key_id }}" >> .env
-           echo "razorpay_key_secret=${{ env.razorpay_key_secret }}" >> .env
+           echo "razorpay_key_id=${{ env.RAZORPAY_KEY_ID }}" >> .env
+           echo "razorpay_key_secret=${{ env.RAZORPAY_KEY_SECRETt }}" >> .env
 
     - name: Verify Environment Variables
       run: node verify-env.js
-    - name: Build Project
-      run: npm run build   # (if you have a build step, like Next.js/React/Vue)
+    # - name: Build Project
+    #   run: npm run build   # (if you have a build step, like Next.js/React/Vue)
 
     - name: Start Application
       run: pm2 restart app
