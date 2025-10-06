@@ -50,4 +50,4 @@ jobs:
     #   run: npm run build   # (if you have a build step, like Next.js/React/Vue)
 
     - name: Start Application
-      run: pm2 restart app
+      run: npm start
