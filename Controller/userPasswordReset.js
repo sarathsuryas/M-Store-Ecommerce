@@ -3,7 +3,6 @@ const { User } = require('../model/userschema')
 
 const nodemailer = require('nodemailer')
 const bcrypt = require('bcrypt');
-const { PassThrough } = require('nodemailer/lib/xoauth2');
 var randtoken = require('rand-token');
 
 const forgotPassword = async (req,res,next) =>{
@@ -20,7 +19,7 @@ const forgotPassword = async (req,res,next) =>{
     var token = randtoken.generate(16);
    user.token = token;
    
-   user.tokenExpire = Date.now() + 10 * 60 * 1000
+   user.tokenExpire = Date.now() + 60 * 60 * 1000;  // 1 hour
   
   await  user.save()
 
@@ -38,7 +37,7 @@ let mailOptions = {
   subject:"Reset Your password using this link",
   html:`<p>Hello ${user.username},</p>
   <p>You requsted a password reset for your account.Click the link below to reset your password:</p>
-  <a href="perfet-pitch-service.site/reset-password?token=${token}">Reset Password</a>
+  <a href="https://perfet-pitch-service.site/reset-password?token=${token}">Reset Password</a>
   <p>If you didn't request this ,please ignore this email.</p>
   `
 };
@@ -61,11 +60,9 @@ const resetPassword = async (req,res,next) =>{
   try {
     let newDate = Date.now()
     const email = req.session.email
-    console.log(email,'///////////////////////////////')
     const token = req.query.token;
-    
     const user = await User.findOne({email:email})
-
+    console.log(user.token)
    if(user.token===token&& newDate <= user.tokenExpire){
     return res.render('USER/resetPassword')
    }else{
