@@ -32,7 +32,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - run: npm ci   # Clean install dependencies
+    - run: npm install   # Clean install dependencies
 
     - name: Set up environment variables
       run: | 
